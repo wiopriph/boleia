@@ -1,0 +1,34 @@
+{
+  "name": "boleia-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "sync-types": "scripts/sync-types.sh",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.152",
+    "@nuxt/ui": "^4.12.0",
+    "@nuxtjs/supabase": "^2.1.0",
+    "@vueuse/core": "^15.0.0",
+    "@vueuse/nuxt": "^15.0.0",
+    "nuxt": "^4.6.4",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "eslint": "^10.13.0",
+    "h3": "^1.15.11",
+    "typescript": "^6.0.3",
+    "vue-tsc": "^3.3.13",
+    "wrangler": "^4.158.0"
+  }
+}

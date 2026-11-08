@@ -1,0 +1,14 @@
+node_modules
+.nuxt
+.output
+.data
+.wrangler
+dist
+logs
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+.idea
+.vscode
