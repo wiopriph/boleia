@@ -6,20 +6,21 @@ export type Profile = Tables<'profiles'>
 export function useProfile() {
   const db = useDb()
   const user = useSupabaseUser()
+  const userId = useUserId()
   const { rpc } = useRpc()
   const profile = useState<Profile | null>('profile', () => null)
   const loaded = useState<string | null>('profile-loaded-for', () => null)
 
-  async function load(force = false, userId = user.value?.id) {
-    if (!userId) {
+  async function load(force = false, id = userId.value) {
+    if (!id) {
       profile.value = null
       loaded.value = null
       return null
     }
-    if (!force && loaded.value === userId) return profile.value
-    const { data } = await db.from('profiles').select('*').eq('id', userId).maybeSingle()
+    if (!force && loaded.value === id) return profile.value
+    const { data } = await db.from('profiles').select('*').eq('id', id).maybeSingle()
     profile.value = data
-    loaded.value = userId
+    loaded.value = id
     return data
   }
 

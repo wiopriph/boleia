@@ -19,6 +19,7 @@
     "@nuxtjs/supabase": "^2.1.0",
     "@vueuse/core": "^15.0.0",
     "@vueuse/nuxt": "^15.0.0",
+    "browser-image-compression": "^2.0.2",
     "nuxt": "^4.6.4",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"

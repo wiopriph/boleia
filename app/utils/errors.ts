@@ -95,3 +95,10 @@ Object.assign(BOLEIA_ERRORS, {
   OTP_SEND_FAILED: 'Não foi possível enviar o código. Verifique o número e tente novamente.',
   OTP_INVALID: 'Código incorreto ou expirado. Peça um novo código.'
 })
+
+// Upload errors raised by the client before anything reaches Storage.
+Object.assign(BOLEIA_ERRORS, {
+  FILE_TOO_LARGE: 'O ficheiro é demasiado grande. O limite é 5 MB.',
+  FILE_TYPE_INVALID: 'Formato não suportado. Envie uma fotografia (JPG, PNG, WebP).',
+  UPLOAD_FAILED: 'Não foi possível enviar o ficheiro. Tente novamente.'
+})
