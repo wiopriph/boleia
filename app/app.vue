@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { pt } from '@nuxt/ui/locale';
+
+
 useHead({
   htmlAttrs: { lang: 'pt-AO' },
   titleTemplate: title => (title ? `${title} | Boleia` : 'Boleia'),
@@ -7,7 +10,10 @@ useHead({
 </script>
 
 <template>
-  <UApp :toaster="{ position: 'top-center' }">
+  <UApp
+    :locale="pt"
+    :toaster="{ position: 'top-center' }"
+  >
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

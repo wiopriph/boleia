@@ -71,3 +71,28 @@ export function formatDuration(minutes: number | null | undefined): string {
 
   return rest ? `${hours} h ${rest} min` : `${hours} h`;
 }
+
+// Hour of day (0-23) in Luanda, for the time-of-day filter.
+export function getLuandaHour(value: DateInput): number {
+  const hour = new Intl.DateTimeFormat('en-GB', { timeZone: TIME_ZONE, hour: '2-digit', hourCycle: 'h23' })
+    .formatToParts(toDate(value))
+    .find(part => part.type === 'hour')?.value;
+
+  return Number(hour ?? 0);
+}
+
+// "segunda-feira, 12 de novembro"
+export function formatDayLong(value: DateInput): string {
+  return new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, weekday: 'long', day: 'numeric', month: 'long' }).format(toDate(value));
+}
+
+export function addDays(dateString: string, days: number): string {
+  const [year, month, day] = dateString.split('-').map(Number);
+  const date = new Date(Date.UTC(year ?? 1970, (month ?? 1) - 1, (day ?? 1) + days));
+
+  return date.toISOString().slice(0, 10);
+}
+
+export function isValidDateString(value: unknown): value is string {
+  return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
+}

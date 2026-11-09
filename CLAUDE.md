@@ -26,6 +26,8 @@ RPC, Edge Functions); there is no API server, the client talks to Supabase direc
 - Nuxt UI components only (Lucide icons), one accent color, mobile first, one primary action per screen.
 - Secrets: only `SUPABASE_URL` and the anon key via `.env`, never committed.
 - Missing field or RPC: stop and describe what boleia-db needs; no client-side workarounds.
+- SSR data must be the value returned from `useAsyncData` (or live in `useState`): refs filled as a
+  side effect inside the handler are empty after hydration.
 
 ## Workflow
 
