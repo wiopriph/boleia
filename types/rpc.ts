@@ -1,14 +1,15 @@
 // jsonb arguments and results of RPCs are not derivable from the schema; shapes come from
 // boleia-db/docs/api.md ("Формы jsonb"). Keep in sync when the contract changes.
-import type { Database } from './database'
+import type { Database } from './database';
 
-export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
-export type Views<T extends keyof Database['public']['Views']> = Database['public']['Views'][T]['Row']
-export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T]
+
+export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
+export type Views<T extends keyof Database['public']['Views']> = Database['public']['Views'][T]['Row'];
+export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T];
 
 export type PayoutMethod
   = | { type: 'mcx_express', phone: string }
-    | { type: 'iban', iban: string, bank: string }
+    | { type: 'iban', iban: string, bank: string };
 
 export interface UpsertProfilePayload {
   display_name?: string
@@ -51,7 +52,7 @@ export interface PublishTripPayload {
 
 export type UpdateTripPayload = Partial<Pick<PublishTripPayload,
   'price_per_seat_kz' | 'seats_offered' | 'notes' | 'luggage' | 'max_two_in_back'
-  | 'origin_detail' | 'destination_detail' | 'departure_at' | 'booking_mode' | 'wait_minutes'>>
+  | 'origin_detail' | 'destination_detail' | 'departure_at' | 'booking_mode' | 'wait_minutes'>>;
 
 export interface VerificationDocs {
   id_doc_url: string
@@ -71,7 +72,7 @@ export interface BookingPaymentResult {
 
 export type RefundRule
   = 'driver_cancel' | 'driver_decline' | 'driver_unconfirmed'
-    | 'passenger_withdraw' | 'passenger_early' | 'passenger_late'
+    | 'passenger_withdraw' | 'passenger_early' | 'passenger_late';
 
 export interface CancelQuote {
   refund_kz: number
@@ -90,7 +91,7 @@ export interface CancelResult {
 
 export type EnterPinResult
   = | { ok: true, pin_entered_at: string, already?: boolean }
-    | { ok: false, attempts_left: number }
+    | { ok: false, attempts_left: number };
 
 export interface RevealContactResult {
   user_id: string
@@ -118,7 +119,7 @@ export interface DriverArrivedResult {
 export type PaymentInstructions
   = | { type: 'push', deep_link?: string, qr_payload?: string | null }
     | { type: 'qr', qr_payload: string }
-    | { type: 'redirect', url: string }
+    | { type: 'redirect', url: string };
 
 export interface PaymentsInitResult {
   payment_id: string
@@ -138,4 +139,4 @@ export interface PaymentsStatusResult {
 // bookings.cancel_reason values set by the system (anything else is free text from a party)
 export type SystemCancelReason
   = 'PAYMENT_PHONE_MISMATCH' | 'payment_expired' | 'trip_departed' | 'trip_cancelled'
-    | 'no_response' | 'dispute_refund' | 'driver_no_show' | 'moderation'
+    | 'no_response' | 'dispute_refund' | 'driver_no_show' | 'moderation';

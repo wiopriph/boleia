@@ -1,56 +1,77 @@
 <script setup lang="ts">
-import { z } from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Profile } from '~/composables/useProfile'
+import { z } from 'zod';
+import type { FormSubmitEvent } from '@nuxt/ui';
+import type { Profile } from '~/composables/useProfile';
 
-const props = defineProps<{ profile: Profile, onboarding?: boolean }>()
-const emit = defineEmits<{ saved: [] }>()
 
-const { update } = useProfile()
-const { messageFor } = useBoleiaError()
-const toast = useToast()
+const props = defineProps<{ profile: Profile, isOnboarding?: boolean }>();
+const emit = defineEmits<{ saved: [] }>();
 
-const currentYear = new Date().getFullYear()
+const { update } = useProfile();
+const { messageFor } = useBoleiaError();
+const toast = useToast();
+
+const currentYear = new Date().getFullYear();
 const schema = z.object({
-  display_name: z.string().trim().min(2, 'O nome tem de ter pelo menos 2 caracteres').max(40, 'No máximo 40 caracteres'),
-  birth_year: z.number().int().min(1920, 'Ano inválido').max(currentYear - 18, 'Tem de ter 18 anos ou mais').optional(),
-  bio: z.string().trim().max(300, 'No máximo 300 caracteres').optional()
-})
-type Form = z.output<typeof schema>
+  display_name: z.string().trim()
+    .min(2, 'O nome tem de ter pelo menos 2 caracteres')
+    .max(40, 'No máximo 40 caracteres'),
+  birth_year: z.number().int()
+    .min(1920, 'Ano inválido')
+    .max(currentYear - 18, 'Tem de ter 18 anos ou mais')
+    .optional(),
+  bio: z.string().trim()
+    .max(300, 'No máximo 300 caracteres')
+    .optional(),
+});
+
+type Form = z.output<typeof schema>;
 
 const state = reactive<Form>({
   display_name: props.profile.display_name,
   birth_year: props.profile.birth_year ?? undefined,
-  bio: props.profile.bio ?? undefined
-})
-const avatarUrl = ref<string | null>(props.profile.avatar_url)
+  bio: props.profile.bio ?? undefined,
+});
+const avatarUrl = ref<string | null>(props.profile.avatar_url);
 
-const pending = ref(false)
-const formError = ref<string | null>(null)
+const isPending = ref(false);
+const formError = ref<string | null>(null);
 
 // the photo is saved as soon as it is uploaded, so a dropped connection never loses it
 async function onAvatar(url: string) {
   try {
-    await update({ avatar_url: url })
-  } catch (e) {
-    formError.value = messageFor(e)
+    await update({ avatar_url: url });
+  } catch (error) {
+    formError.value = messageFor(error);
   }
 }
 
 async function onSubmit(event: FormSubmitEvent<Form>) {
-  formError.value = null
-  pending.value = true
+  formError.value = null;
+  isPending.value = true;
+
   try {
     await update({
       display_name: event.data.display_name,
-      ...(props.onboarding ? {} : { birth_year: event.data.birth_year, bio: event.data.bio ?? '' })
-    })
-    toast.add({ title: 'Perfil guardado', color: 'success', icon: 'i-lucide-check' })
-    emit('saved')
-  } catch (e) {
-    formError.value = messageFor(e)
+      ...(props.isOnboarding ?
+        {} :
+        {
+          birth_year: event.data.birth_year,
+          bio: event.data.bio ?? '',
+        }),
+    });
+
+    toast.add({
+      title: 'Perfil guardado',
+      color: 'success',
+      icon: 'i-lucide-check',
+    });
+
+    emit('saved');
+  } catch (error) {
+    formError.value = messageFor(error);
   } finally {
-    pending.value = false
+    isPending.value = false;
   }
 }
 </script>
@@ -64,7 +85,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
   >
     <UFormField
       label="Fotografia"
-      :help="onboarding ? 'Os condutores e passageiros vêem a sua fotografia antes de aceitar.' : undefined"
+      :help="isOnboarding ? 'Os condutores e passageiros vêem a sua fotografia antes de aceitar.' : undefined"
     >
       <UiPhotoUpload
         v-model="avatarUrl"
@@ -89,7 +110,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
       />
     </UFormField>
 
-    <template v-if="!onboarding">
+    <template v-if="!isOnboarding">
       <UFormField
         label="Ano de nascimento"
         name="birth_year"
@@ -99,7 +120,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
           v-model="state.birth_year"
           :min="1920"
           :max="currentYear - 18"
-          :format-options="{ useGrouping: false }"
+          :formatOptions="{ useGrouping: false }"
           size="lg"
           class="w-full sm:w-48"
         />
@@ -130,10 +151,10 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
     <UButton
       type="submit"
       size="lg"
-      :block="onboarding"
-      :loading="pending"
+      :block="isOnboarding"
+      :loading="isPending"
     >
-      {{ onboarding ? 'Continuar' : 'Guardar' }}
+      {{ isOnboarding ? 'Continuar' : 'Guardar' }}
     </UButton>
   </UForm>
 </template>

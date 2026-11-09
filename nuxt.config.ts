@@ -1,5 +1,9 @@
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/ui', '@nuxtjs/supabase', '@vueuse/nuxt'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxtjs/supabase',
+    '@vueuse/nuxt',
+  ],
 
   devtools: { enabled: true },
 
@@ -8,18 +12,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-06-30',
 
   nitro: {
-    preset: 'cloudflare_module'
+    preset: 'cloudflare_module',
   },
 
-  typescript: { strict: true, typeCheck: false },
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
+  typescript: {
+    strict: true,
+    typeCheck: false,
   },
 
   supabase: {
@@ -30,8 +28,8 @@ export default defineNuxtConfig({
       auth: {
         // phone + OTP: no OAuth redirects, so no PKCE/url parsing needed
         flowType: 'implicit',
-        detectSessionInUrl: false
-      }
-    }
-  }
-})
+        detectSessionInUrl: false,
+      },
+    },
+  },
+});

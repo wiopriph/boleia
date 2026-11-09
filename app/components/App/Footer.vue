@@ -4,8 +4,8 @@ const links = [
   { label: 'Segurança', to: '/seguranca' },
   { label: 'Pagamentos e reembolsos', to: '/pagamentos-e-reembolsos' },
   { label: 'Perguntas frequentes', to: '/faq' },
-  { label: 'Contactos', to: '/contactos' }
-]
+  { label: 'Contactos', to: '/contactos' },
+];
 </script>
 
 <template>
@@ -13,15 +13,18 @@ const links = [
     <UContainer class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <nav class="flex flex-wrap gap-x-4 gap-y-2">
         <NuxtLink
-          v-for="l in links"
-          :key="l.to"
-          :to="l.to"
+          v-for="link in links"
+          :key="link.to"
+          :to="link.to"
           class="hover:text-default"
         >
-          {{ l.label }}
+          {{ link.label }}
         </NuxtLink>
       </nav>
-      <p>Boleia, {{ new Date().getFullYear() }}</p>
+
+      <p>
+        Boleia, {{ new Date().getFullYear() }}
+      </p>
     </UContainer>
   </footer>
 </template>

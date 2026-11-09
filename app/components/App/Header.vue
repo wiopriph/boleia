@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const { user, signOut } = useAuth()
-const { isAdmin } = useProfile()
+const { user, signOut } = useAuth();
+const { isAdmin } = useProfile();
 
 const menu = computed(() => [
   [
@@ -8,11 +8,11 @@ const menu = computed(() => [
     { label: 'As minhas viagens', icon: 'i-lucide-car', to: '/conta/viagens' },
     { label: 'Mensagens', icon: 'i-lucide-message-circle', to: '/conta/mensagens' },
     { label: 'Carteira', icon: 'i-lucide-wallet', to: '/conta/carteira' },
-    { label: 'Perfil', icon: 'i-lucide-user', to: '/conta/perfil' }
+    { label: 'Perfil', icon: 'i-lucide-user', to: '/conta/perfil' },
   ],
   ...(isAdmin.value ? [[{ label: 'Administração', icon: 'i-lucide-shield', to: '/admin' }]] : []),
-  [{ label: 'Sair', icon: 'i-lucide-log-out', onSelect: () => signOut() }]
-])
+  [{ label: 'Sair', icon: 'i-lucide-log-out', onSelect: () => signOut() }],
+]);
 </script>
 
 <template>

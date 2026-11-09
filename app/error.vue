@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { NuxtError } from '#app'
+import type { NuxtError } from '#app';
 
-const props = defineProps<{ error: NuxtError }>()
 
-const notFound = computed(() => props.error.statusCode === 404)
+const props = defineProps<{ error: NuxtError }>();
+
+const isNotFound = computed(() => props.error.statusCode === 404);
 </script>
 
 <template>
@@ -12,12 +13,15 @@ const notFound = computed(() => props.error.statusCode === 404)
       <p class="text-6xl font-semibold text-muted">
         {{ error.statusCode }}
       </p>
+
       <h1 class="text-xl font-semibold">
-        {{ notFound ? 'Página não encontrada' : 'Algo correu mal' }}
+        {{ isNotFound ? 'Página não encontrada' : 'Algo correu mal' }}
       </h1>
+
       <p class="max-w-sm text-muted">
-        {{ notFound ? 'O endereço pode estar errado ou a página já não existe.' : 'Tente novamente dentro de alguns instantes.' }}
+        {{ isNotFound ? 'O endereço pode estar errado ou a página já não existe.' : 'Tente novamente dentro de alguns instantes.' }}
       </p>
+
       <UButton
         size="lg"
         @click="clearError({ redirect: '/' })"

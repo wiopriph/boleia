@@ -1,100 +1,116 @@
 <script setup lang="ts">
-import { z } from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import { z } from 'zod';
+import type { FormSubmitEvent } from '@nuxt/ui';
 
-definePageMeta({ middleware: 'guest' })
-useSeoMeta({ title: 'Entrar', robots: 'noindex' })
 
-const route = useRoute()
-const { sendCode, verifyCode } = useAuth()
-const { load, update, profile } = useProfile()
-const { messageFor } = useBoleiaError()
+definePageMeta({ middleware: 'guest' });
+useSeoMeta({ title: 'Entrar', robots: 'noindex' });
 
-const step = ref<'phone' | 'code'>('phone')
-const pending = ref(false)
-const formError = ref<string | null>(null)
-const localPhone = ref('')
+const route = useRoute();
+const { sendCode, verifyCode } = useAuth();
+const { load, update, profile } = useProfile();
+const { messageFor } = useBoleiaError();
+
+const step = ref<'phone' | 'code'>('phone');
+const isPending = ref(false);
+const formError = ref<string | null>(null);
+const localPhone = ref('');
 
 const phoneSchema = z.object({
-  phone: z.string().refine(v => normalizeLocalPhone(v) !== null, 'Indique um número angolano com 9 dígitos, por exemplo 923 456 789')
-})
+  phone: z.string().refine(value => normalizeLocalPhone(value) !== null, 'Indique um número angolano com 9 dígitos, por exemplo 923 456 789'),
+});
 const codeSchema = z.object({
-  code: z.string().regex(/^\d{6}$/, 'O código tem 6 dígitos')
-})
-type PhoneForm = z.output<typeof phoneSchema>
-type CodeForm = z.output<typeof codeSchema>
+  code: z.string().regex(/^\d{6}$/, 'O código tem 6 dígitos'),
+});
 
-const phoneState = reactive<PhoneForm>({ phone: '' })
-const codeState = reactive<CodeForm>({ code: '' })
+type PhoneForm = z.output<typeof phoneSchema>;
+type CodeForm = z.output<typeof codeSchema>;
+
+const phoneState = reactive<PhoneForm>({ phone: '' });
+const codeState = reactive<CodeForm>({ code: '' });
 // UPinInput models an array of digits; the form validates the joined string
-const pinDigits = ref<string[]>([])
-watch(pinDigits, (v) => {
-  codeState.code = v.join('')
-}, { deep: true })
+const pinDigits = ref<string[]>([]);
+
+watch(pinDigits, (digits) => {
+  codeState.code = digits.join('');
+}, { deep: true });
 
 // resend cooldown mirrors GoTrue's per-number limit
-const RESEND_SECONDS = 60
-const resendIn = ref(0)
+const RESEND_SECONDS = 60;
+const resendIn = ref(0);
 const { pause, resume } = useIntervalFn(() => {
-  if (resendIn.value > 0) resendIn.value -= 1
-  else pause()
-}, 1000, { immediate: false })
+  if (resendIn.value > 0) {
+    resendIn.value -= 1;
+  } else {
+    pause();
+  }
+}, 1000, { immediate: false });
 
 function startCooldown() {
-  resendIn.value = RESEND_SECONDS
-  resume()
+  resendIn.value = RESEND_SECONDS;
+  resume();
 }
 
 async function onPhone(event: FormSubmitEvent<PhoneForm>) {
-  formError.value = null
-  pending.value = true
+  formError.value = null;
+  isPending.value = true;
+
   try {
-    localPhone.value = normalizeLocalPhone(event.data.phone)!
-    await sendCode(localPhone.value)
-    step.value = 'code'
-    startCooldown()
-  } catch (e) {
-    formError.value = messageFor(e)
+    localPhone.value = normalizeLocalPhone(event.data.phone)!;
+    await sendCode(localPhone.value);
+    step.value = 'code';
+    startCooldown();
+  } catch (error) {
+    formError.value = messageFor(error);
   } finally {
-    pending.value = false
+    isPending.value = false;
   }
 }
 
 async function resend() {
-  if (resendIn.value > 0) return
-  formError.value = null
+  if (resendIn.value > 0) {
+    return;
+  }
+
+  formError.value = null;
+
   try {
-    await sendCode(localPhone.value)
-    startCooldown()
-  } catch (e) {
-    formError.value = messageFor(e)
+    await sendCode(localPhone.value);
+    startCooldown();
+  } catch (error) {
+    formError.value = messageFor(error);
   }
 }
 
 async function onCode(event: FormSubmitEvent<CodeForm>) {
-  formError.value = null
-  pending.value = true
+  formError.value = null;
+  isPending.value = true;
+
   try {
-    const signedIn = await verifyCode(localPhone.value, event.data.code)
-    await load(true, signedIn?.id)
+    const signedIn = await verifyCode(localPhone.value, event.data.code);
+
+    await load(true, signedIn?.id);
+
     // consent is given by continuing past the text under the button; recorded once (spec sections 8, 15)
     if (profile.value && !(profile.value.terms_accepted_at && profile.value.adult_confirmed_at)) {
-      await update({ terms_accepted: true, adult_confirmed: true })
+      await update({ terms_accepted: true, adult_confirmed: true });
     }
-    const redirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/') ? route.query.redirect : '/'
-    await navigateTo(redirect)
-  } catch (e) {
-    formError.value = messageFor(e)
+
+    const redirect = typeof route.query.redirect === 'string' && route.query.redirect.startsWith('/') ? route.query.redirect : '/';
+
+    await navigateTo(redirect);
+  } catch (error) {
+    formError.value = messageFor(error);
   } finally {
-    pending.value = false
+    isPending.value = false;
   }
 }
 
 function back() {
-  step.value = 'phone'
-  codeState.code = ''
-  pinDigits.value = []
-  formError.value = null
+  step.value = 'phone';
+  codeState.code = '';
+  pinDigits.value = [];
+  formError.value = null;
 }
 </script>
 
@@ -144,7 +160,7 @@ function back() {
         type="submit"
         size="xl"
         block
-        :loading="pending"
+        :loading="isPending"
       >
         Enviar código
       </UButton>
@@ -154,12 +170,16 @@ function back() {
         <NuxtLink
           to="/regras"
           class="underline"
-        >Regras</NuxtLink>
+        >
+          Regras
+        </NuxtLink>
         e a política de
         <NuxtLink
           to="/seguranca"
           class="underline"
-        >Segurança</NuxtLink>.
+        >
+          Segurança
+        </NuxtLink>.
       </p>
     </UForm>
 
@@ -199,7 +219,7 @@ function back() {
         type="submit"
         size="xl"
         block
-        :loading="pending"
+        :loading="isPending"
       >
         Confirmar
       </UButton>
@@ -213,6 +233,7 @@ function back() {
         >
           Outro número
         </UButton>
+
         <UButton
           variant="link"
           color="neutral"

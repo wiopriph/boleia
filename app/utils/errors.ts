@@ -79,26 +79,29 @@ export const BOLEIA_ERRORS: Record<string, string> = {
   VERIFICATION_CLOSED: 'Esta verificação já foi decidida.',
   VERIFICATION_INCOMPLETE: 'Envie os quatro documentos: BI, carta de condução, fotografia do veículo com matrícula e selfie.',
   VERIFICATION_PENDING: 'Já tem um pedido de verificação em análise.',
-  WAIT_INVALID: 'Tempo de espera inválido: 30, 45 ou 60 minutos.'
-}
+  WAIT_INVALID: 'Tempo de espera inválido: 30, 45 ou 60 minutos.',
+};
 
-export const GENERIC_ERROR = 'Algo correu mal. Tente novamente.'
-export const OFFLINE_ERROR = 'Sem ligação. Verifique a internet e tente novamente.'
+export const GENERIC_ERROR = 'Algo correu mal. Tente novamente.';
+export const OFFLINE_ERROR = 'Sem ligação. Verifique a internet e tente novamente.';
 
 export function errorText(code: string | null | undefined): string {
-  if (!code) return GENERIC_ERROR
-  return BOLEIA_ERRORS[code] ?? GENERIC_ERROR
+  if (!code) {
+    return GENERIC_ERROR;
+  }
+
+  return BOLEIA_ERRORS[code] ?? GENERIC_ERROR;
 }
 
 // Auth errors raised by the client itself (GoTrue has no BOLEIA_ codes).
 Object.assign(BOLEIA_ERRORS, {
   OTP_SEND_FAILED: 'Não foi possível enviar o código. Verifique o número e tente novamente.',
-  OTP_INVALID: 'Código incorreto ou expirado. Peça um novo código.'
-})
+  OTP_INVALID: 'Código incorreto ou expirado. Peça um novo código.',
+});
 
 // Upload errors raised by the client before anything reaches Storage.
 Object.assign(BOLEIA_ERRORS, {
   FILE_TOO_LARGE: 'O ficheiro é demasiado grande. O limite é 5 MB.',
   FILE_TYPE_INVALID: 'Formato não suportado. Envie uma fotografia (JPG, PNG, WebP).',
-  UPLOAD_FAILED: 'Não foi possível enviar o ficheiro. Tente novamente.'
-})
+  UPLOAD_FAILED: 'Não foi possível enviar o ficheiro. Tente novamente.',
+});

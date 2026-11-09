@@ -1,24 +1,25 @@
 <script setup lang="ts">
-const { rpc } = useRpc()
-const db = useDb()
-const { messageFor } = useBoleiaError()
+const { rpc } = useRpc();
+const db = useDb();
+const { messageFor } = useBoleiaError();
 
-const open = ref(false)
-const pending = ref(false)
-const error = ref<string | null>(null)
+const isOpen = ref(false);
+const isPending = ref(false);
+const errorText = ref<string | null>(null);
 
 async function confirm() {
-  pending.value = true
-  error.value = null
+  isPending.value = true;
+  errorText.value = null;
+
   try {
-    await rpc('delete_me', {} as never)
+    await rpc('delete_me', {} as never);
     // the server already revoked the sessions; this only drops the local cookies
-    await db.auth.signOut({ scope: 'local' })
-    await navigateTo('/', { replace: true })
-  } catch (e) {
-    error.value = messageFor(e)
+    await db.auth.signOut({ scope: 'local' });
+    await navigateTo('/', { replace: true });
+  } catch (error) {
+    errorText.value = messageFor(error);
   } finally {
-    pending.value = false
+    isPending.value = false;
   }
 }
 </script>
@@ -29,40 +30,43 @@ async function confirm() {
       Os seus dados pessoais são apagados. O histórico de viagens fica anónimo por razões contabilísticas.
       Não é possível apagar a conta com reservas ativas ou saldo na carteira.
     </p>
+
     <UButton
       color="error"
       variant="soft"
       icon="i-lucide-trash-2"
-      @click="open = true"
+      @click="isOpen = true"
     >
       Apagar conta
     </UButton>
 
     <UModal
-      v-model:open="open"
+      v-model:open="isOpen"
       title="Apagar a conta?"
       description="Esta ação não pode ser anulada. Deixa de conseguir entrar com este número."
     >
       <template #body>
         <UAlert
-          v-if="error"
+          v-if="errorText"
           color="error"
           variant="soft"
           icon="i-lucide-circle-alert"
-          :description="error"
+          :description="errorText"
         />
       </template>
+
       <template #footer>
         <UButton
           variant="ghost"
           color="neutral"
-          @click="open = false"
+          @click="isOpen = false"
         >
           Cancelar
         </UButton>
+
         <UButton
           color="error"
-          :loading="pending"
+          :loading="isPending"
           @click="confirm"
         >
           Apagar definitivamente

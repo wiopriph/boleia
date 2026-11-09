@@ -14,22 +14,22 @@
     "cf:deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@iconify-json/lucide": "^1.2.152",
-    "@nuxt/ui": "^4.12.0",
-    "@nuxtjs/supabase": "^2.1.0",
-    "@vueuse/core": "^15.0.0",
-    "@vueuse/nuxt": "^15.0.0",
-    "browser-image-compression": "^2.0.2",
-    "nuxt": "^4.6.4",
-    "tailwindcss": "^4.3.3",
-    "zod": "^4.6.7"
+    "@iconify-json/lucide": "1.2.152",
+    "@nuxt/ui": "4.12.0",
+    "@nuxtjs/supabase": "2.1.0",
+    "@vueuse/core": "15.0.0",
+    "@vueuse/nuxt": "15.0.0",
+    "browser-image-compression": "2.0.2",
+    "nuxt": "4.6.4",
+    "tailwindcss": "4.3.3",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "@nuxt/eslint": "^1.17.0",
-    "eslint": "^10.13.0",
-    "h3": "^1.15.11",
-    "typescript": "^6.0.3",
-    "vue-tsc": "^3.3.13",
-    "wrangler": "^4.158.0"
+    "@wiopriph/eslint-config": "github:wiopriph/nuxt4-eslint-config#80d7405d6462d6c2d46bb412610b878564f69060",
+    "eslint": "9.39.1",
+    "h3": "1.15.11",
+    "typescript": "6.0.3",
+    "vue-tsc": "3.3.13",
+    "wrangler": "4.158.0"
   }
 }

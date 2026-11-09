@@ -1,37 +1,49 @@
-import type { Tables, UpsertProfilePayload } from '~~/types/rpc'
+import type { Tables, UpsertProfilePayload } from '~~/types/rpc';
 
-export type Profile = Tables<'profiles'>
+
+export type Profile = Tables<'profiles'>;
 
 // Own profile row (RLS: own row only). Loaded once per session, refreshed after upsert_profile.
 export function useProfile() {
-  const db = useDb()
-  const user = useSupabaseUser()
-  const userId = useUserId()
-  const { rpc } = useRpc()
-  const profile = useState<Profile | null>('profile', () => null)
-  const loaded = useState<string | null>('profile-loaded-for', () => null)
+  const db = useDb();
+  const user = useSupabaseUser();
+  const userId = useUserId();
+  const { rpc } = useRpc();
+  const profile = useState<Profile | null>('profile', () => null);
+  const loadedForUserId = useState<string | null>('profile-loadedForUserId-for', () => null);
 
-  async function load(force = false, id = userId.value) {
+  async function load(shouldRefetch = false, id = userId.value) {
     if (!id) {
-      profile.value = null
-      loaded.value = null
-      return null
+      profile.value = null;
+      loadedForUserId.value = null;
+
+      return null;
     }
-    if (!force && loaded.value === id) return profile.value
-    const { data } = await db.from('profiles').select('*').eq('id', id).maybeSingle()
-    profile.value = data
-    loaded.value = id
-    return data
+
+    if (!shouldRefetch && loadedForUserId.value === id) {
+      return profile.value;
+    }
+
+    const { data } = await db.from('profiles').select('*')
+      .eq('id', id)
+      .maybeSingle();
+
+    profile.value = data;
+    loadedForUserId.value = id;
+
+    return data;
   }
 
   async function update(payload: UpsertProfilePayload) {
-    const row = await rpc('upsert_profile', { payload: payload as never })
-    profile.value = row as Profile
-    return profile.value
+    const row = await rpc('upsert_profile', { payload: payload as never });
+
+    profile.value = row as Profile;
+
+    return profile.value;
   }
 
-  const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin')
-  const isComplete = computed(() => !!profile.value && profile.value.display_name.trim().length >= 2)
+  const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin');
+  const isComplete = computed(() => !!profile.value && profile.value.display_name.trim().length >= 2);
 
-  return { profile, load, update, isAdmin, isComplete }
+  return { profile, load, update, isAdmin, isComplete };
 }

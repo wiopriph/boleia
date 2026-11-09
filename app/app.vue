@@ -2,8 +2,8 @@
 useHead({
   htmlAttrs: { lang: 'pt-AO' },
   titleTemplate: title => (title ? `${title} | Boleia` : 'Boleia'),
-  link: [{ rel: 'icon', href: '/favicon.ico' }]
-})
+  link: [{ rel: 'icon', href: '/favicon.ico' }],
+});
 </script>
 
 <template>

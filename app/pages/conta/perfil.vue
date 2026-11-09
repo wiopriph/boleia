@@ -1,47 +1,55 @@
 <script setup lang="ts">
-import type { PayoutMethod } from '~~/types/rpc'
+import type { PayoutMethod } from '~~/types/rpc';
 
-definePageMeta({ middleware: 'auth' })
-useSeoMeta({ title: 'O meu perfil', robots: 'noindex' })
 
-const route = useRoute()
-const { profile, load } = useProfile()
-const { load: loadVehicles } = useVehicles()
+definePageMeta({ middleware: 'auth' });
+useSeoMeta({ title: 'O meu perfil', robots: 'noindex' });
 
-const onboarding = computed(() => route.query.onboarding === '1')
+const route = useRoute();
+const { profile, load } = useProfile();
+const { load: loadVehicles } = useVehicles();
+
+const isOnboarding = computed(() => route.query.onboarding === '1');
 const redirectAfter = computed(() => {
-  const r = route.query.redirect
-  return typeof r === 'string' && r.startsWith('/') ? r : '/'
-})
+  const redirect = route.query.redirect;
 
-const { pending } = await useAsyncData('conta-perfil', async () => {
-  await Promise.all([load(true), loadVehicles()])
-  return true
-})
+  return typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/';
+});
 
-const payoutMethod = computed(() => (profile.value?.payout_method ?? null) as PayoutMethod | null)
+const { pending: isPending } = await useAsyncData('conta-perfil', async () => {
+  await Promise.all([load(true), loadVehicles()]);
+
+  return true;
+});
+
+const payoutMethod = computed(() => (profile.value?.payout_method ?? null) as PayoutMethod | null);
 
 function onSaved() {
-  if (onboarding.value) navigateTo(redirectAfter.value)
+  if (isOnboarding.value) {
+    navigateTo(redirectAfter.value);
+  }
 }
 </script>
 
 <template>
   <UContainer class="max-w-2xl py-8">
-    <template v-if="onboarding">
+    <template v-if="isOnboarding">
       <h1 class="text-2xl font-semibold">
         Complete o seu perfil
       </h1>
+
       <p class="mt-1 text-muted">
         Só falta o nome e uma fotografia para continuar.
       </p>
+
       <UCard class="mt-6">
         <ProfileForm
           v-if="profile"
           :profile="profile"
-          onboarding
+          isOnboarding
           @saved="onSaved"
         />
+
         <USkeleton
           v-else
           class="h-40 w-full"
@@ -53,6 +61,7 @@ function onSaved() {
       <h1 class="text-2xl font-semibold">
         O meu perfil
       </h1>
+
       <p
         v-if="profile?.phone"
         class="mt-1 text-muted"
@@ -61,10 +70,11 @@ function onSaved() {
       </p>
 
       <div
-        v-if="pending && !profile"
+        v-if="isPending && !profile"
         class="mt-6 space-y-4"
       >
         <USkeleton class="h-56 w-full" />
+
         <USkeleton class="h-40 w-full" />
       </div>
 
@@ -78,6 +88,7 @@ function onSaved() {
               Dados pessoais
             </h2>
           </template>
+
           <ProfileForm :profile="profile" />
         </UCard>
 
@@ -87,6 +98,7 @@ function onSaved() {
               <h2 class="font-semibold">
                 Os meus veículos
               </h2>
+
               <UBadge
                 v-if="profile.driver_status === 'verified'"
                 color="primary"
@@ -97,6 +109,7 @@ function onSaved() {
               </UBadge>
             </div>
           </template>
+
           <ProfileVehicles />
         </UCard>
 
@@ -105,10 +118,12 @@ function onSaved() {
             <h2 class="font-semibold">
               Método de levantamento
             </h2>
+
             <p class="mt-1 text-sm text-muted">
               Para onde enviamos o dinheiro das suas viagens. Obrigatório para publicar.
             </p>
           </template>
+
           <ProfilePayoutMethod :current="payoutMethod" />
         </UCard>
 
@@ -118,6 +133,7 @@ function onSaved() {
               Apagar conta
             </h2>
           </template>
+
           <ProfileDeleteAccount />
         </UCard>
       </div>

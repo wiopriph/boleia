@@ -1,25 +1,38 @@
 <script setup lang="ts">
-import { z } from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
-import type { Vehicle } from '~/composables/useVehicles'
+import { z } from 'zod';
+import type { FormSubmitEvent } from '@nuxt/ui';
+import type { Vehicle } from '~/composables/useVehicles';
 
-const props = defineProps<{ vehicle?: Vehicle | null }>()
-const open = defineModel<boolean>('open', { default: false })
 
-const { save } = useVehicles()
-const { messageFor } = useBoleiaError()
-const toast = useToast()
+const props = defineProps<{ vehicle?: Vehicle | null }>();
+const isOpen = defineModel<boolean>('open', { default: false });
 
-const currentYear = new Date().getFullYear()
+const { save } = useVehicles();
+const { messageFor } = useBoleiaError();
+const toast = useToast();
+
+const currentYear = new Date().getFullYear();
 const schema = z.object({
-  make: z.string().trim().min(2, 'Indique a marca'),
-  model: z.string().trim().min(1, 'Indique o modelo'),
-  color: z.string().trim().max(30).optional(),
-  year: z.number().int().min(1980, 'Ano inválido').max(currentYear + 1, 'Ano inválido').optional(),
-  plate: z.string().trim().max(12, 'Matrícula demasiado longa').optional(),
-  seats_total: z.number().int().min(1, 'Mínimo 1').max(8, 'Máximo 8')
-})
-type Form = z.output<typeof schema>
+  make: z.string().trim()
+    .min(2, 'Indique a marca'),
+  model: z.string().trim()
+    .min(1, 'Indique o modelo'),
+  color: z.string().trim()
+    .max(30)
+    .optional(),
+  year: z.number().int()
+    .min(1980, 'Ano inválido')
+    .max(currentYear + 1, 'Ano inválido')
+    .optional(),
+  plate: z.string().trim()
+    .max(12, 'Matrícula demasiado longa')
+    .optional(),
+  seats_total: z.number().int()
+    .min(1, 'Mínimo 1')
+    .max(8, 'Máximo 8'),
+});
+
+type Form = z.output<typeof schema>;
 
 const state = reactive<Form>({
   make: '',
@@ -27,30 +40,35 @@ const state = reactive<Form>({
   color: undefined,
   year: undefined,
   plate: undefined,
-  seats_total: 4
-})
-const photoUrl = ref<string | null>(null)
-const pending = ref(false)
-const formError = ref<string | null>(null)
+  seats_total: 4,
+});
+const photoUrl = ref<string | null>(null);
+const isPending = ref(false);
+const formError = ref<string | null>(null);
 
-watch(open, (isOpen) => {
-  if (!isOpen) return
-  const v = props.vehicle
-  state.make = v?.make ?? ''
-  state.model = v?.model ?? ''
-  state.color = v?.color ?? undefined
-  state.year = v?.year ?? undefined
-  state.plate = v?.plate ?? undefined
-  state.seats_total = v?.seats_total ?? 4
-  photoUrl.value = v?.photo_url ?? null
-  formError.value = null
-})
+watch(isOpen, (isOpenNow) => {
+  if (!isOpen.value) {
+    return;
+  }
 
-const plateChanged = computed(() => !!props.vehicle?.verified && !!props.vehicle.plate && state.plate !== props.vehicle.plate)
+  const vehicle = props.vehicle;
+
+  state.make = vehicle?.make ?? '';
+  state.model = vehicle?.model ?? '';
+  state.color = vehicle?.color ?? undefined;
+  state.year = vehicle?.year ?? undefined;
+  state.plate = vehicle?.plate ?? undefined;
+  state.seats_total = vehicle?.seats_total ?? 4;
+  photoUrl.value = vehicle?.photo_url ?? null;
+  formError.value = null;
+});
+
+const hasPlateChanged = computed(() => !!props.vehicle?.verified && !!props.vehicle.plate && state.plate !== props.vehicle.plate);
 
 async function onSubmit(event: FormSubmitEvent<Form>) {
-  formError.value = null
-  pending.value = true
+  formError.value = null;
+  isPending.value = true;
+
   try {
     await save({
       ...(props.vehicle ? { id: props.vehicle.id } : {}),
@@ -60,21 +78,27 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
       year: event.data.year,
       plate: event.data.plate?.toUpperCase() || undefined,
       seats_total: event.data.seats_total,
-      photo_url: photoUrl.value ?? undefined
-    })
-    toast.add({ title: props.vehicle ? 'Veículo atualizado' : 'Veículo adicionado', color: 'success', icon: 'i-lucide-check' })
-    open.value = false
-  } catch (e) {
-    formError.value = messageFor(e)
+      photo_url: photoUrl.value ?? undefined,
+    });
+
+    toast.add({
+      title: props.vehicle ? 'Veículo atualizado' : 'Veículo adicionado',
+      color: 'success',
+      icon: 'i-lucide-check',
+    });
+
+    isOpen.value = false;
+  } catch (error) {
+    formError.value = messageFor(error);
   } finally {
-    pending.value = false
+    isPending.value = false;
   }
 }
 </script>
 
 <template>
   <UModal
-    v-model:open="open"
+    v-model:open="isOpen"
     :title="vehicle ? 'Editar veículo' : 'Adicionar veículo'"
     description="Os passageiros vêem a marca, o modelo, a cor e a fotografia. A matrícula fica privada."
   >
@@ -104,6 +128,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
               class="w-full"
             />
           </UFormField>
+
           <UFormField
             label="Modelo"
             name="model"
@@ -114,6 +139,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
               class="w-full"
             />
           </UFormField>
+
           <UFormField
             label="Cor"
             name="color"
@@ -124,6 +150,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
               class="w-full"
             />
           </UFormField>
+
           <UFormField
             label="Ano"
             name="year"
@@ -132,10 +159,11 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
               v-model="state.year"
               :min="1980"
               :max="currentYear + 1"
-              :format-options="{ useGrouping: false }"
+              :formatOptions="{ useGrouping: false }"
               class="w-full"
             />
           </UFormField>
+
           <UFormField
             label="Matrícula"
             name="plate"
@@ -146,6 +174,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
               class="w-full font-mono uppercase"
             />
           </UFormField>
+
           <UFormField
             label="Lugares (sem o condutor)"
             name="seats_total"
@@ -160,7 +189,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
         </div>
 
         <UAlert
-          v-if="plateChanged"
+          v-if="hasPlateChanged"
           color="warning"
           variant="soft"
           icon="i-lucide-triangle-alert"
@@ -179,13 +208,14 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
           <UButton
             variant="ghost"
             color="neutral"
-            @click="open = false"
+            @click="isOpen = false"
           >
             Cancelar
           </UButton>
+
           <UButton
             type="submit"
-            :loading="pending"
+            :loading="isPending"
           >
             Guardar
           </UButton>
