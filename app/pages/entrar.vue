@@ -173,13 +173,13 @@ function back() {
         >
           Regras
         </NuxtLink>
-        e a política de
+        e as recomendações de
         <NuxtLink
           to="/seguranca"
           class="underline"
         >
           Segurança
-        </NuxtLink>.
+        </NuxtLink>
       </p>
     </UForm>
 

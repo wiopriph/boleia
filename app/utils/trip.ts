@@ -51,3 +51,19 @@ export function ratingLabel(average: number | null, count: number | null): strin
   return `${Number(average ?? 0).toFixed(1)
     .replace('.', ',')} (${count})`;
 }
+
+export function luggageLabel(size: Enums<'luggage_size'>): string {
+  const labels: Record<Enums<'luggage_size'>, string> = {
+    small: 'Bagagem pequena (mochila)',
+    medium: 'Bagagem média (mala de cabine)',
+    large: 'Bagagem grande',
+  };
+
+  return labels[size];
+}
+
+export function bookingModeHint(mode: Enums<'booking_mode'>): string {
+  return mode === 'instant' ?
+    'O lugar fica confirmado assim que o pagamento é aprovado.' :
+    'Depois de pagar, o condutor tem 24 horas para aceitar. Se recusar, o valor é devolvido na totalidade.';
+}

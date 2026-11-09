@@ -1,4 +1,6 @@
 <script setup lang="ts">
+withDefaults(defineProps<{ isCompact?: boolean }>(), { isCompact: false });
+
 const points = [
   { icon: 'i-lucide-smartphone', title: 'Paga na app Multicaixa Express', text: 'Sem dinheiro vivo. O pagamento é confirmado em minutos.' },
   { icon: 'i-lucide-shield-check', title: 'O dinheiro fica protegido', text: 'A Boleia guarda o valor até ao fim da viagem. O condutor só recebe depois de chegar.' },
@@ -7,12 +9,21 @@ const points = [
 </script>
 
 <template>
-  <section class="rounded-xl bg-elevated p-5">
-    <h2 class="text-lg font-semibold">
+  <section
+    class="rounded-xl bg-elevated"
+    :class="isCompact ? 'p-4' : 'p-5'"
+  >
+    <h2
+      class="font-semibold"
+      :class="isCompact ? 'text-base' : 'text-lg'"
+    >
       Pagamento protegido
     </h2>
 
-    <ul class="mt-4 grid gap-4 sm:grid-cols-3">
+    <ul
+      class="mt-4 grid gap-4"
+      :class="isCompact ? '' : 'sm:grid-cols-3'"
+    >
       <li
         v-for="point in points"
         :key="point.title"

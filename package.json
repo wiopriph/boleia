@@ -16,11 +16,14 @@
   "dependencies": {
     "@iconify-json/lucide": "1.2.152",
     "@nuxt/ui": "4.12.0",
+    "@nuxtjs/seo": "6.0.1",
     "@nuxtjs/supabase": "2.1.0",
+    "@resvg/resvg-js": "2.6.2",
     "@vueuse/core": "15.0.0",
     "@vueuse/nuxt": "15.0.0",
     "browser-image-compression": "2.0.2",
     "nuxt": "4.6.4",
+    "satori": "0.47.1",
     "tailwindcss": "4.3.3",
     "zod": "4.6.7"
   },
