@@ -42,8 +42,10 @@ async function reserve() {
     }
 
     const result = await requestBooking(props.trip.id, seats.value);
+    // dev only: carry the mock gateway scenario over to the payment page
+    const simulate = import.meta.dev && typeof route.query.simulate === 'string' ? { simulate: route.query.simulate } : {};
 
-    await navigateTo(`/conta/reservas/${result.booking_id}/pagamento`);
+    await navigateTo({ path: `/conta/reservas/${result.booking_id}/pagamento`, query: simulate });
   } catch (error) {
     await toastError(error);
   } finally {
