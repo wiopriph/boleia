@@ -6,10 +6,14 @@ const props = defineProps<{ trip: TripPublic, isOwnTrip: boolean }>();
 
 const user = useSupabaseUser();
 const route = useRoute();
+const { requestBooking } = useBooking();
+const { load: loadProfile, isComplete } = useProfile();
+const { toastError } = useBoleiaError();
 
 const maxSeats = computed(() => Math.min(MAX_SEATS, props.trip.seats_available));
 const isFull = computed(() => props.trip.status === 'full' || maxSeats.value <= 0);
 const seats = ref(1);
+const isReserving = ref(false);
 
 const seatItems = computed(() => Array.from({ length: Math.max(maxSeats.value, 1) }, (_, index) => ({
   label: seatsLabel(index + 1),
@@ -18,15 +22,33 @@ const seatItems = computed(() => Array.from({ length: Math.max(maxSeats.value, 1
 
 const total = computed(() => seats.value * props.trip.price_per_seat_kz);
 
-function reserve() {
+async function reserve() {
   if (!user.value) {
-    navigateTo({ path: '/entrar', query: { redirect: route.fullPath } });
+    await navigateTo({ path: '/entrar', query: { redirect: route.fullPath } });
 
     return;
   }
 
-  // the booking and payment flow is the next screen; until then the button only signs the user in
-  useToast().add({ title: 'Reservas em breve', description: 'O pagamento está a ser ligado.', color: 'neutral' });
+  isReserving.value = true;
+
+  try {
+    await loadProfile();
+
+    // a name is the minimum the driver needs to see; the full profile comes later
+    if (!isComplete.value) {
+      await navigateTo({ path: '/conta/perfil', query: { onboarding: '1', redirect: route.fullPath } });
+
+      return;
+    }
+
+    const result = await requestBooking(props.trip.id, seats.value);
+
+    await navigateTo(`/conta/reservas/${result.booking_id}/pagamento`);
+  } catch (error) {
+    await toastError(error);
+  } finally {
+    isReserving.value = false;
+  }
 }
 </script>
 
@@ -99,6 +121,7 @@ function reserve() {
           size="xl"
           block
           icon="i-lucide-ticket"
+          :loading="isReserving"
           @click="reserve"
         >
           Reservar {{ seatsLabel(seats) }}

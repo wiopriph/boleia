@@ -23,11 +23,13 @@
     "@vueuse/nuxt": "15.0.0",
     "browser-image-compression": "2.0.2",
     "nuxt": "4.6.4",
+    "qrcode": "1.5.4",
     "satori": "0.47.1",
     "tailwindcss": "4.3.3",
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@types/qrcode": "^1.5.6",
     "@wiopriph/eslint-config": "github:wiopriph/nuxt4-eslint-config#80d7405d6462d6c2d46bb412610b878564f69060",
     "eslint": "9.39.1",
     "h3": "1.15.11",
