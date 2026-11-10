@@ -1,4 +1,4 @@
-import type { Enums, SystemCancelReason, Views } from '~~/types/rpc';
+import type { Enums, RefundRule, SystemCancelReason, Views } from '~~/types/rpc';
 
 
 export type BookingRow = Views<'my_bookings'>;
@@ -61,4 +61,24 @@ export function bookingStatusText(booking: BookingRow): StatusText {
     default:
       return { label: status, detail: '', tone: 'neutral' };
   }
+}
+
+const UPCOMING_STATUSES: Enums<'booking_status'>[] = ['pending_payment', 'requested', 'accepted', 'awaiting_confirm', 'disputed'];
+
+// "Próximas" holds everything that still needs the passenger; the rest is history
+export function isUpcomingBooking(booking: BookingRow): boolean {
+  return UPCOMING_STATUSES.includes(booking.status);
+}
+
+export function refundRuleText(rule: RefundRule): string {
+  const texts: Record<RefundRule, string> = {
+    driver_cancel: 'O condutor cancelou: reembolso total.',
+    driver_decline: 'O condutor recusou o pedido: reembolso total.',
+    driver_unconfirmed: 'O condutor ainda não confirmou a viagem: pode cancelar com reembolso total.',
+    passenger_withdraw: 'O condutor ainda não respondeu: reembolso total, menos a taxa do pagamento.',
+    passenger_early: 'Faltam mais de 24 horas para a partida: reembolso total, menos a taxa do pagamento.',
+    passenger_late: 'Faltam menos de 24 horas para a partida: reembolso de 50 %. O restante fica para o condutor depois da viagem.',
+  };
+
+  return texts[rule] ?? '';
 }

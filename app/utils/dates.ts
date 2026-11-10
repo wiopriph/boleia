@@ -17,14 +17,15 @@ export function formatTime(value: DateInput): string {
   }).format(toDate(value));
 }
 
-// "seg., 12 nov."
+// "quinta, 12 nov": pt-PT collapses day + short month into "12/11", so the parts are joined by hand
 export function formatDay(value: DateInput): string {
-  return new Intl.DateTimeFormat(LOCALE, {
-    timeZone: TIME_ZONE,
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  }).format(toDate(value));
+  const date = toDate(value);
+  const weekday = new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, weekday: 'short' }).format(date);
+  const day = new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, day: 'numeric' }).format(date);
+  const month = new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, month: 'short' }).format(date)
+    .replace('.', '');
+
+  return `${weekday}, ${day} ${month}`;
 }
 
 // "12 de novembro de 2026"
