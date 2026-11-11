@@ -40,6 +40,9 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
 
 - `h3` 1.x is a direct devDependency on purpose: npm otherwise hoists h3 2.x from eslint's config
   inspector, and `@nuxtjs/supabase` then imports the wrong major (`event.req.headers.get is not a function`).
+- Node 24 / npm 11 everywhere (`.node-version`): npm 10 resolves peer dependencies differently and
+  `npm ci` rejects this lock file ("Missing: eslint@10 ... from lock file"), which broke the first
+  Cloudflare build on its default Node 22.
 - Port 3000 is taken by Docker (local Supabase); `npm run dev` moves to 3001.
 - Composables that `await` (useAsyncData) lose the Nuxt instance afterwards: call head composables
   before the await with reactive getters, wrap the rest in `nuxtApp.runWithContext`.

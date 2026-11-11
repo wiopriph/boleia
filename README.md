@@ -11,6 +11,8 @@ npm run dev            # http://localhost:3000
 Test users and the API contract: `../boleia-db/docs/api.md`. Types are synced from there with
 `npm run sync-types`.
 
+Node 24 (`.node-version`); the lock file is written by npm 11 and `npm ci` from npm 10 rejects it.
+
 Deploy: Cloudflare Workers. `npm run build`, then `npm run cf:deploy` (`wrangler login` once).
 The build bakes `SUPABASE_URL` and `SUPABASE_KEY` (anon key) from `.env`. Public runtime values live in
 `wrangler.jsonc` `vars`: `NUXT_PUBLIC_SITE_URL`, `NUXT_PUBLIC_SUPPORT_EMAIL` (shown on `/contactos`) and
