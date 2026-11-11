@@ -65,7 +65,7 @@ async function confirm() {
       color: 'success',
       icon: 'i-lucide-check',
     });
-    
+
     await refreshTrip();
   } catch (error) {
     await toastError(error);
