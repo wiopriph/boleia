@@ -80,6 +80,7 @@ export const BOLEIA_ERRORS: Record<string, string> = {
   VERIFICATION_INCOMPLETE: 'Envie os quatro documentos: BI, carta de condução, fotografia do veículo com matrícula e selfie.',
   VERIFICATION_PENDING: 'Já tem um pedido de verificação em análise.',
   WAIT_INVALID: 'Tempo de espera inválido: 30, 45 ou 60 minutos.',
+  YEAR_INVALID: 'O ano do veículo tem de estar entre 1980 e 2030.',
 };
 
 export const GENERIC_ERROR = 'Algo correu mal. Tente novamente.';

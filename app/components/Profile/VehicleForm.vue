@@ -11,7 +11,9 @@ const { save } = useVehicles();
 const { messageFor } = useBoleiaError();
 const toast = useToast();
 
-const currentYear = new Date().getFullYear();
+// same range as upsert_vehicle (YEAR_INVALID)
+const MIN_VEHICLE_YEAR = 1980;
+const MAX_VEHICLE_YEAR = 2030;
 const schema = z.object({
   make: z.string().trim()
     .min(2, 'Indique a marca'),
@@ -21,8 +23,8 @@ const schema = z.object({
     .max(30)
     .optional(),
   year: z.number().int()
-    .min(1980, 'Ano inválido')
-    .max(currentYear + 1, 'Ano inválido')
+    .min(MIN_VEHICLE_YEAR, 'Ano inválido')
+    .max(MAX_VEHICLE_YEAR, 'Ano inválido')
     .optional(),
   plate: z.string().trim()
     .max(12, 'Matrícula demasiado longa')
@@ -157,8 +159,8 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
           >
             <UInputNumber
               v-model="state.year"
-              :min="1980"
-              :max="currentYear + 1"
+              :min="MIN_VEHICLE_YEAR"
+              :max="MAX_VEHICLE_YEAR"
               :formatOptions="{ useGrouping: false }"
               class="w-full"
             />
