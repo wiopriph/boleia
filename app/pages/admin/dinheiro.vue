@@ -151,7 +151,7 @@ async function exportCsv() {
         </table>
 
         <p class="mt-3 text-sm text-muted">
-          Cada operação é registada em duas contas, por isso a soma de todos os saldos é zero.
+          Cada operação é registada em duas contas com sinais opostos: a soma de todos os saldos é zero e a entrada de dinheiro aparece com sinal negativo.
         </p>
       </template>
     </UCard>
