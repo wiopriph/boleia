@@ -462,7 +462,7 @@ async function publish() {
               :min="MIN_PRICE"
               :max="MAX_PRICE"
               :step="500"
-              :formatOptions="{ useGrouping: true }"
+              :formatOptions="{ useGrouping: false }"
               size="lg"
               class="w-48"
             />

@@ -202,6 +202,7 @@ const waitItems = [
             <UFormField label="Preço por lugar (Kz)">
               <UInputNumber
                 v-model="edit.price"
+                :formatOptions="{ useGrouping: false }"
                 :min="500"
                 :max="100000"
                 :step="500"
