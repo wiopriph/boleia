@@ -10,8 +10,8 @@ const queues = computed(() => {
       { label: 'Denúncias abertas', count: current.reports_open, to: '/admin/denuncias' },
       { label: 'Disputas', count: current.disputes, to: '/admin/disputas' },
       { label: 'Levantamentos por tratar', count: current.payouts, to: '/admin/levantamentos' },
-      { label: 'Reembolsos automáticos em fila', count: current.refunds_pending, to: null },
-      { label: 'Reembolsos a fazer à mão', count: current.refunds_manual, to: null },
+      { label: 'Reembolsos automáticos em fila', count: current.refunds_pending, to: '/admin/dinheiro' },
+      { label: 'Reembolsos a fazer à mão', count: current.refunds_manual, to: '/admin/dinheiro' },
     ] :
     [];
 });
@@ -58,16 +58,14 @@ const periods = computed(() => {
           v-for="queue in queues"
           :key="queue.label"
         >
-          <component
-            :is="queue.to ? resolveComponent('NuxtLink') : 'div'"
-            :to="queue.to ?? undefined"
-            class="flex items-center justify-between gap-3 rounded-lg border border-default p-3"
-            :class="queue.to ? 'transition-colors hover:border-primary' : ''"
+          <NuxtLink
+            :to="queue.to"
+            class="flex items-center justify-between gap-3 rounded-lg border border-default p-3 transition-colors hover:border-primary"
           >
             <span class="text-sm">{{ queue.label }}</span>
 
             <span class="text-xl font-semibold tabular-nums">{{ queue.count }}</span>
-          </component>
+          </NuxtLink>
         </li>
       </ul>
 

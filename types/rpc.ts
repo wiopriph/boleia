@@ -193,3 +193,34 @@ export interface AdminCancelBookingResult {
   status: Enums<'booking_status'>
   refund_kz: number
 }
+
+export interface AdminPlacePayload {
+  id?: string
+  name: string
+  province: string
+  slug: string
+  kind: Enums<'place_kind'>
+  lat: number | null
+  lng: number | null
+  aliases: string[]
+  is_active: boolean
+}
+
+export interface AdminWeek {
+  week_start: string
+  new_users: number
+  trips_published: number
+  requests: number
+  paid: number
+  accepted: number
+  completed: number
+  cancelled_by_passenger: number
+  cancelled_by_driver: number
+  cancelled_by_system: number
+  gmv_kz: number
+  fee_kz: number
+  refunds_kz: number
+  driver_response_hours: number | null
+  verification_hours: number | null
+  top_routes: { origin: string, destination: string, paid: number }[]
+}

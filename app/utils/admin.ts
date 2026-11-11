@@ -130,3 +130,22 @@ export const MODERATION_CHOICES: ModerationChoice[] = [
   { action: 'ban', label: 'Banir', description: 'A conta e o número ficam banidos. As viagens e reservas ativas são canceladas com reembolso total.', isDestructive: true },
   { action: 'unban', label: 'Reativar conta', description: 'A conta volta a ficar ativa e o número deixa de estar banido.', isDestructive: false },
 ];
+
+const PLACE_KIND: Record<Enums<'place_kind'>, string> = {
+  city: 'Cidade',
+  town: 'Vila',
+  landmark: 'Ponto de referência',
+};
+
+export function placeKindLabel(kind: Enums<'place_kind'>): string {
+  return PLACE_KIND[kind];
+}
+
+export const PLACE_KIND_ITEMS = (Object.keys(PLACE_KIND) as Enums<'place_kind'>[]).map(kind => ({ label: PLACE_KIND[kind], value: kind }));
+
+export function slugify(text: string): string {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}

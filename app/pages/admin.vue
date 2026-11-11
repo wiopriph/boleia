@@ -12,6 +12,9 @@ const links = computed(() => [
   { label: 'Disputas', to: '/admin/disputas', count: stats.value?.queues.disputes ?? null },
   { label: 'Levantamentos', to: '/admin/levantamentos', count: stats.value?.queues.payouts ?? null },
   { label: 'Utilizadores', to: '/admin/utilizadores', count: null },
+  { label: 'Dinheiro', to: '/admin/dinheiro', count: stats.value?.queues.refunds_manual ?? null },
+  { label: 'Semanas', to: '/admin/semanas', count: null },
+  { label: 'Locais', to: '/admin/locais', count: null },
 ]);
 
 function isActive(path: string) {

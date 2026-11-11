@@ -1,6 +1,8 @@
 import type { BookingRow } from '~/utils/booking-status';
+import type { Database } from '~~/types/database';
 import type {
-  AdminCancelBookingResult, AdminCancelTripResult, AdminStats, AdminUser, DisputeOutcome, ModerationAction, Tables,
+  AdminCancelBookingResult, AdminCancelTripResult, AdminPlacePayload, AdminStats, AdminUser, AdminWeek,
+  DisputeOutcome, ModerationAction, Tables,
 } from '~~/types/rpc';
 
 
@@ -23,6 +25,11 @@ export type AdminTrip = Pick<Tables<'trips'>, 'id' | 'status' | 'departure_at' |
 export type AdminPayment = Pick<Tables<'payments'>, 'id' | 'booking_id' | 'amount_kz' | 'status' | 'refund_kz' | 'paid_at' | 'refunded_at' | 'created_at'>;
 export type AdminMessage = Pick<Tables<'messages'>, 'id' | 'sender_id' | 'body' | 'created_at'>;
 
+export type AdminPlace = Tables<'places'>;
+export type AdminLedgerBalance = Database['public']['Functions']['admin_ledger_balances']['Returns'][number];
+export type AdminRefund = Database['public']['Functions']['admin_refund_queue']['Returns'][number];
+export type AdminLedgerEntry = Tables<'ledger_entries'>;
+
 export interface AdminUserDetail {
   user: AdminUser
   payoutMethod: Tables<'profiles'>['payout_method']
@@ -43,6 +50,8 @@ const TRIP_COLUMNS = 'id, status, departure_at, price_per_seat_kz, seats_offered
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const HISTORY_LIMIT = 30;
 const CHAT_LIMIT = 200;
+// PostgREST caps a response at 1000 rows; the export pages through the ledger by id
+const EXPORT_PAGE_SIZE = 1000;
 
 // Admin reads rely on RLS (is_admin() sees every row), every action is an RPC (spec section 11).
 export function useAdmin() {
@@ -263,7 +272,74 @@ export function useAdmin() {
     return rpc<AdminCancelBookingResult>('admin_cancel_booking', { booking_id: bookingId, reason });
   }
 
+  async function fetchPlaces(): Promise<AdminPlace[]> {
+    const { data } = await db.from('places').select('*')
+      .order('name');
+
+    return data ?? [];
+  }
+
+  function upsertPlace(payload: AdminPlacePayload) {
+    return rpc('admin_upsert_place', { payload: payload as never });
+  }
+
+  function mergePlaces(fromId: string, intoId: string) {
+    return rpc('admin_merge_places', { from_id: fromId, into_id: intoId });
+  }
+
+  function fetchWeekly(weeks: number) {
+    return rpc<AdminWeek[]>('admin_weekly', { weeks });
+  }
+
+  function fetchLedgerBalances() {
+    return rpc('admin_ledger_balances', {} as never);
+  }
+
+  function fetchRefundQueue() {
+    return rpc('admin_refund_queue', {} as never);
+  }
+
+  function markRefundManual(paymentId: string, ref: string) {
+    return rpc('admin_mark_refund_manual', { payment_id: paymentId, ref });
+  }
+
+  // every ledger entry created in [fromIso, toIso), oldest first
+  async function fetchLedgerRange(fromIso: string, toIso: string): Promise<AdminLedgerEntry[]> {
+    const entries: AdminLedgerEntry[] = [];
+
+    let lastId = 0;
+    let isLastPage = false;
+
+    while (!isLastPage) {
+      const { data, error } = await db.from('ledger_entries')
+        .select('*')
+        .gte('created_at', fromIso)
+        .lt('created_at', toIso)
+        .gt('id', lastId)
+        .order('id')
+        .limit(EXPORT_PAGE_SIZE);
+
+      if (error) {
+        throw await toBoleiaError(error);
+      }
+
+      entries.push(...data);
+      lastId = data.at(-1)?.id ?? lastId;
+      isLastPage = data.length < EXPORT_PAGE_SIZE;
+    }
+
+    return entries;
+  }
+
   return {
+    fetchPlaces,
+    upsertPlace,
+    mergePlaces,
+    fetchWeekly,
+    fetchLedgerBalances,
+    fetchRefundQueue,
+    markRefundManual,
+    fetchLedgerRange,
     fetchStats,
     fetchVerifications,
     reviewVerification,

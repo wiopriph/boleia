@@ -19,6 +19,7 @@ const props = withDefaults(defineProps<{
   hasDays?: boolean
   // set for a partial refund: the amount must stay below it
   amountBelowKz?: number | null
+  isConfirmDisabled?: boolean
 }>(), {
   description: undefined,
   isDestructive: false,
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<{
   isReasonRequired: true,
   hasDays: false,
   amountBelowKz: null,
+  isConfirmDisabled: false,
 });
 const emit = defineEmits<{ done: [] }>();
 const isOpen = defineModel<boolean>('open', { default: false });
@@ -163,6 +165,7 @@ async function confirm() {
       <UButton
         :color="isDestructive ? 'error' : 'primary'"
         :loading="isRunning"
+        :disabled="isConfirmDisabled"
         @click="confirm"
       >
         {{ confirmLabel }}

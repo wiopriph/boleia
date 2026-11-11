@@ -51,6 +51,8 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
 - Admin (`/admin/*`, `useAdmin`): reads go through RLS (`is_admin()` sees every row, `my_bookings`
   included), actions are RPCs confirmed in `Admin/ActionModal.vue`. `payments` has column grants:
   select only the columns listed in `useAdmin`, `select('*')` is rejected.
+  Money screen: balances and the refund queue come from `admin_ledger_balances` / `admin_refund_queue`
+  (boleia-db 0018); the manual refund button is shown only for `is_manual` rows.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.
