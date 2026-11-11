@@ -140,3 +140,56 @@ export interface PaymentsStatusResult {
 export type SystemCancelReason
   = 'PAYMENT_PHONE_MISMATCH' | 'payment_expired' | 'trip_departed' | 'trip_cancelled'
     | 'no_response' | 'dispute_refund' | 'driver_no_show' | 'moderation';
+
+// Admin (spec section 11)
+export interface AdminUser {
+  id: string
+  display_name: string
+  phone: string | null
+  avatar_url: string | null
+  status: Enums<'profile_status'>
+  suspended_until: string | null
+  is_admin: boolean
+  driver_status: Enums<'driver_status'>
+  rating_avg: number
+  rating_count: number
+  trips_driven: number
+  trips_ridden: number
+  cancels_total: number
+  no_shows: number
+  balance_kz: number
+  created_at: string
+  last_seen_at: string | null
+}
+
+export interface AdminStats {
+  queues: {
+    reports_open: number
+    disputes: number
+    verifications: number
+    payouts: number
+    refunds_pending: number
+    refunds_manual: number
+  }
+  today: { new_users: number, trips_published: number, bookings_paid: number, gmv_kz: number, payment_failed: number }
+  week: { new_users: number, trips_published: number, bookings_paid: number, gmv_kz: number, fee_kz: number }
+  health: {
+    notifications_failed_24h: number
+    reconciliation_mismatches_7d: number
+    scheduler_errors: { job: string, error: string, at: string | null }[]
+    scheduler_last_run: string | null
+  }
+}
+
+export type ModerationAction = 'warn' | 'restrict' | 'suspend' | 'ban' | 'unban';
+export type DisputeOutcome = 'completed' | 'refund_full' | 'refund_partial';
+
+export interface AdminCancelTripResult {
+  cancelled_bookings: number
+  refunded_kz: number
+}
+
+export interface AdminCancelBookingResult {
+  status: Enums<'booking_status'>
+  refund_kz: number
+}

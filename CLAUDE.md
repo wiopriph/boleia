@@ -48,6 +48,9 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
   and `node:sqlite` locally; on the server import `queryCollection` from `@nuxt/content/server`.
 - robots `disallow` entries are prefix matches: `/conta` also closes `/contactos`, so it is `/conta/`.
 - The Workers build of nuxt-og-image needs `@resvg/resvg-wasm`; `@resvg/resvg-js` only serves local dev.
+- Admin (`/admin/*`, `useAdmin`): reads go through RLS (`is_admin()` sees every row, `my_bookings`
+  included), actions are RPCs confirmed in `Admin/ActionModal.vue`. `payments` has column grants:
+  select only the columns listed in `useAdmin`, `select('*')` is rejected.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.
