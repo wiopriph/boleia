@@ -50,17 +50,7 @@ const filtered = computed(() => trips.value.filter((trip) => {
 }));
 
 // the RPC returns the requested day plus its neighbours, so results are grouped by Luanda day
-const groups = computed(() => {
-  const map = new Map<string, typeof filtered.value>();
-
-  for (const trip of filtered.value) {
-    const day = toLuandaDateString(trip.departure_at);
-
-    map.set(day, [...(map.get(day) ?? []), trip]);
-  }
-
-  return [...map.entries()].map(([day, items]) => ({ day, items }));
-});
+const groups = computed(() => groupTripsByDay(filtered.value));
 
 const prices = computed(() => trips.value.map(trip => trip.price_per_seat_kz));
 const hasActiveFilters = computed(() => times.value.length > 0 || maxPrice.value !== null);

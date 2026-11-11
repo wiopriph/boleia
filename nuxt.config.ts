@@ -4,6 +4,7 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@vueuse/nuxt',
     '@nuxtjs/seo',
+    '@nuxt/content',
   ],
 
   // site.url comes from NUXT_PUBLIC_SITE_URL at runtime (nuxt-site-config), request origin in dev
@@ -13,17 +14,27 @@ export default defineNuxtConfig({
     defaultLocale: 'pt-AO',
   },
 
-  // private areas: no indexing, no sitemap; sitemap sources are configured with the SEO pages (step 12)
+  // private areas: no indexing, no sitemap
   robots: {
-    disallow: ['/conta', '/admin', '/entrar', '/publicar', '/avaliar', '/pesquisa'],
+    // robots rules are prefix matches: '/conta' would also close /contactos
+    disallow: ['/conta/', '/admin', '/entrar', '/publicar', '/avaliar/', '/pesquisa'],
   },
   sitemap: {
     exclude: ['/conta/**', '/admin/**', '/entrar', '/publicar', '/avaliar/**', '/pesquisa'],
+    // static texts, routes and cities come from the content collection and route_stats
+    sources: ['/api/__sitemap__/urls'],
   },
   schemaOrg: { enabled: false },
   linkChecker: { enabled: false },
 
   devtools: { enabled: true },
+
+  runtimeConfig: {
+    public: {
+      // NUXT_PUBLIC_SUPPORT_EMAIL, shown on /contactos
+      supportEmail: '',
+    },
+  },
 
   css: ['~/assets/css/main.css'],
 
@@ -31,6 +42,14 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'cloudflare_module',
+  },
+
+  // D1 binding DB on Workers (wrangler.jsonc), node:sqlite in dev and at build time
+  content: {
+    database: { type: 'd1', bindingName: 'DB' },
+    experimental: { sqliteConnector: 'native' },
+    // no code blocks in the texts; shiki would add its wasm to the Worker bundle
+    build: { markdown: { highlight: false } },
   },
 
   typescript: {

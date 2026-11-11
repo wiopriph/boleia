@@ -43,6 +43,11 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
 - Port 3000 is taken by Docker (local Supabase); `npm run dev` moves to 3001.
 - Composables that `await` (useAsyncData) lose the Nuxt instance afterwards: call head composables
   before the await with reactive getters, wrap the rest in `nuxtApp.runWithContext`.
+- Static pages are markdown in `content/paginas/<slug>.md` (rendered by `app/pages/[slug].vue`), optional
+  route texts in `content/rotas/<origem>-<destino>.md`. `@nuxt/content` uses D1 (binding `DB`) on Workers
+  and `node:sqlite` locally; on the server import `queryCollection` from `@nuxt/content/server`.
+- robots `disallow` entries are prefix matches: `/conta` also closes `/contactos`, so it is `/conta/`.
+- The Workers build of nuxt-og-image needs `@resvg/resvg-wasm`; `@resvg/resvg-js` only serves local dev.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.

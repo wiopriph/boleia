@@ -8,6 +8,10 @@
     "directory": "./.output/public/",
     "binding": "ASSETS"
   },
+  // @nuxt/content storage; without database_id wrangler creates the database on the first deploy
+  "d1_databases": [
+    { "binding": "DB", "database_name": "boleia-content" }
+  ],
   "observability": { "enabled": true }
   // SUPABASE_URL and SUPABASE_KEY: wrangler secret put / dashboard vars, never here.
 }

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@iconify-json/lucide": "1.2.152",
+    "@nuxt/content": "3.16.2",
     "@nuxt/ui": "4.12.0",
     "@nuxtjs/seo": "6.0.1",
     "@nuxtjs/supabase": "2.1.0",
@@ -29,6 +30,7 @@
     "zod": "4.6.7"
   },
   "devDependencies": {
+    "@resvg/resvg-wasm": "2.6.2",
     "@types/qrcode": "^1.5.6",
     "@wiopriph/eslint-config": "github:wiopriph/nuxt4-eslint-config#80d7405d6462d6c2d46bb412610b878564f69060",
     "eslint": "9.39.1",
