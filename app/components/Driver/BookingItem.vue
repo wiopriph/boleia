@@ -201,6 +201,17 @@ async function reveal() {
       </UButton>
 
       <UButton
+        v-if="booking.status === 'completed' || booking.status === 'no_show'"
+        :to="`/avaliar/${booking.id}`"
+        variant="ghost"
+        color="neutral"
+        size="sm"
+        icon="i-lucide-star"
+      >
+        Avaliar passageiro
+      </UButton>
+
+      <UButton
         v-if="booking.status === 'accepted'"
         variant="ghost"
         color="error"

@@ -173,7 +173,7 @@ const options = computed(() => {
                   class="size-3.5 align-text-bottom"
                 />
                 {{ ratingLabel(trip.driver_rating_avg, trip.driver_rating_count) }}
-                · {{ trip.driver_trips_driven }} viagens como condutor
+                · {{ tripsCountLabel(trip.driver_trips_driven) }} como condutor
               </p>
             </div>
 

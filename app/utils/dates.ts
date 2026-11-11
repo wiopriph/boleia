@@ -106,3 +106,8 @@ export function toLuandaIso(date: string, time: string): string {
 export function toLuandaTimeString(value: DateInput): string {
   return formatTime(value);
 }
+
+// "novembro de 2026"
+export function formatMonthYear(value: DateInput): string {
+  return new Intl.DateTimeFormat(LOCALE, { timeZone: TIME_ZONE, month: 'long', year: 'numeric' }).format(toDate(value));
+}

@@ -76,7 +76,7 @@ export function passengerTrustLine(booking: BookingRow): string {
     `${Number(booking.passenger_rating_avg).toFixed(1)
       .replace('.', ',')} (${booking.passenger_rating_count})` :
     'Sem avaliações';
-  const parts = [rating, `${booking.passenger_trips_ridden} viagens`];
+  const parts = [rating, tripsCountLabel(booking.passenger_trips_ridden)];
 
   if (booking.passenger_cancels_total > 0) {
     parts.push('às vezes cancela');

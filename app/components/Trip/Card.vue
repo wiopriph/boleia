@@ -96,7 +96,7 @@ const isFull = computed(() => props.trip.status === 'full' || props.trip.seats_a
             />
             {{ ratingLabel(trip.driver_rating_avg, trip.driver_rating_count) }}
           </span>
-          · {{ trip.driver_trips_driven }} viagens
+          · {{ tripsCountLabel(trip.driver_trips_driven) }}
           <span v-if="!trip.driver_verified"> · Condutor não verificado</span>
         </p>
       </div>

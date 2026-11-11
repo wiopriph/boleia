@@ -67,3 +67,9 @@ export function bookingModeHint(mode: Enums<'booking_mode'>): string {
     'O lugar fica confirmado assim que o pagamento é aprovado.' :
     'Depois de pagar, o condutor tem 24 horas para aceitar. Se recusar, o valor é devolvido na totalidade.';
 }
+
+export function tripsCountLabel(count: number | null | undefined): string {
+  const total = count ?? 0;
+
+  return total === 1 ? '1 viagem' : `${total} viagens`;
+}
