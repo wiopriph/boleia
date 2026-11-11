@@ -97,3 +97,12 @@ export function addDays(dateString: string, days: number): string {
 export function isValidDateString(value: unknown): value is string {
   return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
 }
+
+// Luanda is UTC+1 all year, so a local date and time map to a fixed offset.
+export function toLuandaIso(date: string, time: string): string {
+  return `${date}T${time}:00+01:00`;
+}
+
+export function toLuandaTimeString(value: DateInput): string {
+  return formatTime(value);
+}

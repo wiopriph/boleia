@@ -3,7 +3,8 @@ import type { CancelQuote } from '~~/types/rpc';
 import type { BookingRow } from '~/utils/booking-status';
 
 
-const props = defineProps<{ booking: BookingRow }>();
+// the driver cancels a single booking through the same quote; only the wording differs
+const props = withDefaults(defineProps<{ booking: BookingRow, isDriver?: boolean }>(), { isDriver: false });
 const emit = defineEmits<{ cancelled: [] }>();
 const isOpen = defineModel<boolean>('open', { default: false });
 
@@ -42,13 +43,13 @@ async function confirm() {
   try {
     const result = await cancelBooking(props.booking.id);
 
-    toast.add({
-      title: 'Reserva cancelada',
-      description: result.refund_kz > 0 ? `Reembolso de ${formatKz(result.refund_kz)} em 1 a 3 dias úteis.` : 'Sem reembolso.',
-      color: 'success',
-      icon: 'i-lucide-check',
-    });
+    let description = result.refund_kz > 0 ? `Reembolso de ${formatKz(result.refund_kz)} em 1 a 3 dias úteis.` : 'Sem reembolso.';
 
+    if (props.isDriver) {
+      description = `O passageiro recebe ${formatKz(result.refund_kz)} de volta.`;
+    }
+
+    toast.add({ title: 'Reserva cancelada', description, color: 'success', icon: 'i-lucide-check' });
     isOpen.value = false;
     emit('cancelled');
   } catch (error) {
@@ -62,7 +63,7 @@ async function confirm() {
 <template>
   <UModal
     v-model:open="isOpen"
-    title="Cancelar a reserva?"
+    :title="isDriver ? `Cancelar a reserva de ${booking.passenger_name}?` : 'Cancelar a reserva?'"
     :description="`${booking.origin_name} para ${booking.destination_name}, ${formatDateTime(booking.departure_at)}`"
   >
     <template #body>
@@ -75,7 +76,7 @@ async function confirm() {
         <dl class="space-y-1 text-sm">
           <div class="flex justify-between">
             <dt class="text-muted">
-              Pagou
+              {{ isDriver ? 'O passageiro pagou' : 'Pagou' }}
             </dt>
 
             <dd class="tabular-nums">
@@ -113,7 +114,7 @@ async function confirm() {
 
           <div class="flex items-baseline justify-between">
             <dt class="font-medium">
-              Reembolso
+              {{ isDriver ? 'Reembolso ao passageiro' : 'Reembolso' }}
             </dt>
 
             <dd class="text-xl font-semibold tabular-nums">
