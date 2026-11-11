@@ -13,6 +13,8 @@
     { "binding": "DB", "database_name": "boleia-content" }
   ],
   "observability": { "enabled": true },
+  // variables added in the dashboard survive a deploy; the ones below still win by name
+  "keep_vars": true,
   // Public runtime values. The Supabase URL and anon key are baked in at build time from .env;
   // NUXT_APP_SECRET is a Worker secret (wrangler secret put), never here.
   "vars": {
