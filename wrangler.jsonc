@@ -12,6 +12,13 @@
   "d1_databases": [
     { "binding": "DB", "database_name": "boleia-content" }
   ],
-  "observability": { "enabled": true }
-  // SUPABASE_URL and SUPABASE_KEY: wrangler secret put / dashboard vars, never here.
+  "observability": { "enabled": true },
+  // Public runtime values. The Supabase URL and anon key are baked in at build time from .env;
+  // NUXT_APP_SECRET is a Worker secret (wrangler secret put), never here.
+  "vars": {
+    "NUXT_PUBLIC_SITE_URL": "https://boleia.ao",
+    "NUXT_PUBLIC_SUPPORT_EMAIL": "apoio@boleia.ao",
+    // "false" until launch: the backend is still the shared test project
+    "NUXT_PUBLIC_SITE_INDEXABLE": "false"
+  }
 }

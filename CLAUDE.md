@@ -53,6 +53,9 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
   select only the columns listed in `useAdmin`, `select('*')` is rejected.
   Money screen: balances and the refund queue come from `admin_ledger_balances` / `admin_refund_queue`
   (boleia-db 0018); the manual refund button is shown only for `is_manual` rows.
+- Worker `vars` override runtime config only for keys declared in `runtimeConfig` at build time
+  (`public.site.indexable` is declared for that reason). `wrangler dev` lets `.env` override `vars`;
+  pass `--env-file` to check the values a deploy will really use.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.

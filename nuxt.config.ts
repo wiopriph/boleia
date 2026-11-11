@@ -33,6 +33,8 @@ export default defineNuxtConfig({
     public: {
       // NUXT_PUBLIC_SUPPORT_EMAIL, shown on /contactos
       supportEmail: '',
+      // declared so NUXT_PUBLIC_SITE_INDEXABLE=false can close indexing at runtime (Worker var)
+      site: { indexable: true },
     },
   },
 
