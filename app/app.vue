@@ -4,7 +4,15 @@ import { pt } from '@nuxt/ui/locale';
 
 useHead({
   htmlAttrs: { lang: 'pt-AO' },
-  titleTemplate: title => (title ? `${title} | Boleia` : 'Boleia'),
+  // titles that already name the brand ("Regras da Boleia") get no suffix
+  titleTemplate: (title) => {
+    if (!title) {
+      return 'Boleia';
+    }
+
+    return /\bBoleia\b/.test(title) ? title : `${title} | Boleia`;
+  },
+  meta: [{ name: 'theme-color', content: '#ffffff' }],
   link: [
     { rel: 'icon', href: '/favicon.ico', sizes: '48x48' },
     { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },

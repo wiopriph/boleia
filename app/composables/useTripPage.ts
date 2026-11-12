@@ -26,7 +26,7 @@ export async function useTripPage(canonicalPath: (trip: TripPublic) => string) {
     ogTitle: title,
     ogDescription: description,
     ogType: 'website',
-    robots: () => (trip.value ? 'index, follow' : 'noindex'),
+    robots: 'noindex, follow',
   });
 
   useHead({

@@ -5,6 +5,11 @@ import type { NuxtError } from '#app';
 const props = defineProps<{ error: NuxtError }>();
 
 const isNotFound = computed(() => props.error.statusCode === 404);
+
+useSeoMeta({
+  title: () => (isNotFound.value ? 'Página não encontrada' : 'Algo correu mal'),
+  robots: 'noindex',
+});
 </script>
 
 <template>

@@ -78,8 +78,11 @@ useSeoMeta({
         />
 
         <div class="min-w-0 flex-1">
-          <h1 class="page-title flex flex-wrap items-center gap-2">
-            {{ profile.display_name }}
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h1 class="page-title">
+              {{ profile.display_name }}
+            </h1>
+
             <UBadge
               v-if="profile.driver_verified"
               color="primary"
@@ -88,7 +91,7 @@ useSeoMeta({
             >
               Condutor verificado
             </UBadge>
-          </h1>
+          </div>
 
           <p class="mt-1 text-sm text-muted">
             Membro desde {{ formatMonthYear(profile.member_since ?? '') }}<template v-if="ageGroup">

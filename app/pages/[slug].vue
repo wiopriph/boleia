@@ -17,6 +17,8 @@ useSeoMeta({
   ogDescription: () => page.value?.description,
   ogType: 'article',
 });
+
+defineOgImage('Page', { title: page.value.title, subtitle: page.value.description });
 </script>
 
 <template>

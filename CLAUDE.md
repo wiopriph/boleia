@@ -62,6 +62,10 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
 - Worker `vars` override runtime config only for keys declared in `runtimeConfig` at build time
   (`public.site.indexable` is declared for that reason). `wrangler dev` lets `.env` override `vars`;
   pass `--env-file` to check the values a deploy will really use.
+- SEO: indexable pages are the home page, `/boleias/*` and the static texts; search results and
+  trips are `noindex, follow` (trips expire in days, their value is the share preview). Each public
+  page calls `defineOgImage('Page', { title, subtitle })` itself: an app-level default merges its
+  props into the trip image. Indexing stays closed while `NUXT_PUBLIC_SITE_INDEXABLE` is `"false"`.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.

@@ -73,7 +73,13 @@ useSeoMeta({
   description: () => isRouteKnown.value ?
     `Boleias de ${origin.value!.name} para ${destination.value!.name}: horários, preços por lugar e condutores. Pagamento protegido com Multicaixa Express.` :
     'Pesquise boleias entre cidades de Angola.',
-  robots: () => (isRouteKnown.value ? 'index, follow' : 'noindex'),
+  robots: 'noindex, follow',
+});
+
+// a shared search link still gets a preview image
+defineOgImage('Page', {
+  title: isRouteKnown.value ? `${origin.value!.name} para ${destination.value!.name}` : 'Boleias entre cidades',
+  subtitle: 'Horários, preços por lugar e condutores',
 });
 </script>
 

@@ -3,6 +3,11 @@ useSeoMeta({
   title: 'Boleias entre cidades em Angola',
   description: 'Encontre e reserve boleias entre cidades de Angola. Pagamento protegido com Multicaixa Express, condutores verificados.',
 });
+
+defineOgImage('Page', {
+  title: 'Viaja melhor. Partilha a boleia.',
+  subtitle: 'Reserve um lugar com quem já vai fazer a viagem.',
+});
 </script>
 
 <template>

@@ -17,14 +17,22 @@ export default defineNuxtConfig({
   // private areas: no indexing, no sitemap
   robots: {
     // robots rules are prefix matches: '/conta' would also close /contactos
-    disallow: ['/conta/', '/admin', '/entrar', '/publicar', '/avaliar/', '/pesquisa'],
+    disallow: ['/conta/', '/admin', '/entrar', '/publicar', '/avaliar/', '/pesquisa', '/api/'],
   },
   sitemap: {
     exclude: ['/conta/**', '/admin/**', '/entrar', '/publicar', '/avaliar/**', '/pesquisa'],
     // static texts, routes and cities come from the content collection and route_stats
     sources: ['/api/__sitemap__/urls'],
   },
-  schemaOrg: { enabled: false },
+  // JSON-LD: WebSite and WebPage come from the module, the organization from here
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'Boleia',
+      logo: '/logo.png',
+      description: 'Boleias entre cidades em Angola com pagamento protegido.',
+    },
+  },
   linkChecker: { enabled: false },
 
   devtools: { enabled: true },

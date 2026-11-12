@@ -52,7 +52,7 @@ const title = computed(() => {
     return `Boleias ${routeTitle(current.stat)}${price}`;
   }
 
-  return current ? `Boleias ${placeWith('de', current.city.slug, current.city.name)}` : '';
+  return current ? `Boleias ${placeWith('de', current.city.slug, current.city.name)}: destinos e preços` : '';
 });
 
 const description = computed(() => {
@@ -76,6 +76,41 @@ useSeoMeta({
   ogDescription: description,
   ogType: 'website',
 });
+
+const current = page.value;
+
+if (current.kind === 'route') {
+  const { stat } = current;
+  const duration = formatDuration(stat.minutes);
+  const price = stat.trips_upcoming && stat.min_price_kz ? `desde ${formatKz(stat.min_price_kz)} por lugar` : '';
+
+  defineOgImage('Page', {
+    title: `${stat.origin_name} para ${stat.destination_name}`,
+    subtitle: [price, duration ? `cerca de ${duration} de carro` : ''].filter(Boolean).join(' · ') || 'Boleias com pagamento protegido',
+  });
+
+  useSchemaOrg([defineBreadcrumb({
+    itemListElement: [
+      { name: 'Início', item: '/' },
+      { name: `Boleias ${placeWith('de', stat.origin_slug, stat.origin_name)}`, item: routePath(stat.origin_slug) },
+      { name: `${stat.origin_name} para ${stat.destination_name}`, item: routePath(stat.origin_slug, stat.destination_slug) },
+    ],
+  })]);
+} else {
+  const { city } = current;
+
+  defineOgImage('Page', {
+    title: `Boleias ${placeWith('de', city.slug, city.name)}`,
+    subtitle: 'Destinos, preços e próximas viagens',
+  });
+
+  useSchemaOrg([defineBreadcrumb({
+    itemListElement: [
+      { name: 'Início', item: '/' },
+      { name: `Boleias ${placeWith('de', city.slug, city.name)}`, item: routePath(city.slug) },
+    ],
+  })]);
+}
 </script>
 
 <template>
