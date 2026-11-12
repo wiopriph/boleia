@@ -23,11 +23,12 @@ useRealtimeTripBookings(() => upcoming.value.map(trip => trip.id), () => {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <div class="flex items-center justify-between gap-3">
-      <h1 class="text-2xl font-semibold">
-        As minhas viagens
-      </h1>
+  <UiPage>
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <UiPageHeader
+        title="As minhas viagens"
+        description="Gere as viagens que publicaste e os pedidos dos passageiros."
+      />
 
       <UButton
         to="/publicar"
@@ -76,18 +77,11 @@ useRealtimeTripBookings(() => upcoming.value.map(trip => trip.id), () => {
       />
     </div>
 
-    <div
+    <UiEmptyState
       v-else
-      class="mt-10 flex flex-col items-center gap-4 text-center"
-    >
-      <UIcon
-        name="i-lucide-car"
-        class="size-10 text-muted"
-      />
-
-      <p class="text-muted">
-        {{ tab === 'upcoming' ? 'Não tem viagens publicadas.' : 'Ainda não tem viagens anteriores.' }}
-      </p>
-    </div>
-  </UContainer>
+      icon="i-lucide-car"
+      :title="tab === 'upcoming' ? 'Não tem viagens publicadas.' : 'Ainda não tem viagens anteriores.'"
+      class="mt-6"
+    />
+  </UiPage>
 </template>

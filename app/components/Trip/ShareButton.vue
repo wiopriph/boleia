@@ -29,8 +29,9 @@ async function onShare() {
     color="neutral"
     icon="i-lucide-share-2"
     aria-label="Partilhar viagem"
+    class="shrink-0 px-3"
     @click="onShare"
   >
-    Partilhar
+    <span class="hidden sm:inline">Partilhar</span>
   </UButton>
 </template>

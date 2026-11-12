@@ -9,37 +9,48 @@ const points = [
 </script>
 
 <template>
-  <section
-    class="rounded-xl bg-elevated"
-    :class="isCompact ? 'p-4' : 'p-5'"
-  >
-    <h2
-      class="font-semibold"
-      :class="isCompact ? 'text-base' : 'text-lg'"
-    >
-      Pagamento protegido
-    </h2>
+  <section :class="isCompact ? 'rounded-card border border-default bg-default p-5' : ''">
+    <div :class="isCompact ? '' : 'mb-6 sm:mb-8'">
+      <p
+        v-if="!isCompact"
+        class="eyebrow mb-3"
+      >
+        Do primeiro passo ao destino
+      </p>
+
+      <h2 :class="isCompact ? 'card-title' : 'section-title'">
+        Pagamento protegido. Viagem tranquila.
+      </h2>
+    </div>
 
     <ul
-      class="mt-4 grid gap-4"
-      :class="isCompact ? '' : 'sm:grid-cols-3'"
+      class="grid gap-6"
+      :class="isCompact ? 'mt-5' : 'sm:grid-cols-3 sm:gap-8'"
     >
       <li
         v-for="point in points"
         :key="point.title"
-        class="flex gap-3"
+        :class="isCompact ? 'flex gap-3' : 'flex gap-4 sm:block'"
       >
-        <UIcon
-          :name="point.icon"
-          class="mt-0.5 size-6 shrink-0 text-primary"
-        />
+        <span
+          class="flex size-11 shrink-0 items-center justify-center rounded-control bg-primary/8"
+          :class="isCompact ? '' : 'sm:mb-4'"
+        >
+          <UIcon
+            :name="point.icon"
+            class="size-5 text-primary"
+          />
+        </span>
 
         <div>
-          <p class="font-medium">
+          <h3
+            class="text-sm font-semibold"
+            :class="isCompact ? '' : 'sm:text-base'"
+          >
             {{ point.title }}
-          </p>
+          </h3>
 
-          <p class="text-sm text-muted">
+          <p class="mt-1.5 text-sm leading-relaxed text-muted">
             {{ point.text }}
           </p>
         </div>
@@ -48,9 +59,12 @@ const points = [
 
     <NuxtLink
       to="/pagamentos-e-reembolsos"
-      class="mt-4 inline-block text-sm text-primary underline"
+      class="mt-6 inline-flex min-h-10 items-center gap-2 text-sm font-medium text-primary hover:underline"
     >
-      Como funcionam os pagamentos e reembolsos
+      Como funciona o pagamento <UIcon
+        name="i-lucide-arrow-right"
+        class="size-4 shrink-0"
+      />
     </NuxtLink>
   </section>
 </template>

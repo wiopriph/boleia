@@ -80,7 +80,7 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
   <UForm
     :schema="schema"
     :state="state"
-    class="space-y-5"
+    class="measure-form space-y-5"
     @submit="onSubmit"
   >
     <UFormField

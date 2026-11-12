@@ -115,16 +115,24 @@ function back() {
 </script>
 
 <template>
-  <UContainer class="max-w-md py-10">
-    <h1 class="text-2xl font-semibold">
-      Entrar
-    </h1>
+  <UContainer class="max-w-md py-10 sm:py-16">
+    <div class="mb-5 flex size-12 items-center justify-center rounded-control bg-primary/10">
+      <UIcon
+        name="i-lucide-user-round"
+        class="size-6 text-primary"
+      />
+    </div>
+
+    <UiPageHeader
+      title="A tua próxima boleia começa aqui."
+      description="Entra ou cria a tua conta com o teu número de telemóvel."
+    />
 
     <UForm
       v-if="step === 'phone'"
       :schema="phoneSchema"
       :state="phoneState"
-      class="mt-6 space-y-5"
+      class="mt-6 space-y-5 rounded-card border border-default bg-default p-5 sm:p-6"
       @submit="onPhone"
     >
       <UFormField
@@ -187,7 +195,7 @@ function back() {
       v-else
       :schema="codeSchema"
       :state="codeState"
-      class="mt-6 space-y-5"
+      class="mt-6 space-y-5 rounded-card border border-default bg-default p-5 sm:p-6"
       @submit="onCode"
     >
       <p class="text-muted">
@@ -202,7 +210,8 @@ function back() {
           v-model="pinDigits"
           :length="6"
           otp
-          size="xl"
+          size="lg"
+          :ui="{ root: 'gap-1.5', base: 'w-8 min-[375px]:w-9' }"
           autofocus
         />
       </UFormField>

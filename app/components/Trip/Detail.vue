@@ -22,14 +22,23 @@ const options = computed(() => {
 </script>
 
 <template>
-  <UContainer class="py-6">
+  <UiPage>
+    <UButton
+      to="/pesquisa"
+      variant="link"
+      icon="i-lucide-arrow-left"
+      class="mb-5 px-0"
+    >
+      Voltar à pesquisa
+    </UButton>
+
     <div class="flex items-start justify-between gap-3">
-      <div>
+      <div class="min-w-0 flex-1">
         <p class="text-sm text-muted">
           {{ formatDayLong(trip.departure_at) }}
         </p>
 
-        <h1 class="mt-1 text-2xl font-semibold">
+        <h1 class="page-title mt-2">
           {{ trip.origin_name }} <span class="text-muted">para</span> {{ trip.destination_name }}
         </h1>
       </div>
@@ -40,9 +49,13 @@ const options = computed(() => {
       />
     </div>
 
-    <div class="mt-6 grid gap-6 lg:grid-cols-[1fr_22rem]">
+    <div class="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
       <div class="space-y-6">
         <UCard>
+          <h2 class="card-title mb-6">
+            Rota e pontos de encontro
+          </h2>
+
           <ol class="relative space-y-6 border-s-2 border-default ps-5">
             <li class="relative">
               <span class="absolute -start-[1.6rem] top-1.5 size-3 rounded-full border-2 border-primary bg-default" />
@@ -140,7 +153,7 @@ const options = computed(() => {
 
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Condutor
             </h2>
           </template>
@@ -149,33 +162,10 @@ const options = computed(() => {
             :to="`/perfil/${trip.driver_id}`"
             class="flex items-center gap-4"
           >
-            <UAvatar
-              :src="trip.driver_avatar_url ?? undefined"
-              :alt="trip.driver_name ?? ''"
-              icon="i-lucide-user-round"
-              size="xl"
+            <TripDriverSummary
+              :trip="trip"
+              class="flex-1"
             />
-
-            <div class="min-w-0 flex-1">
-              <p class="flex items-center gap-1.5 font-medium">
-                {{ trip.driver_name }}
-                <UIcon
-                  v-if="trip.driver_verified"
-                  name="i-lucide-badge-check"
-                  class="size-4 text-primary"
-                  aria-label="Condutor verificado"
-                />
-              </p>
-
-              <p class="text-sm text-muted">
-                <UIcon
-                  name="i-lucide-star"
-                  class="size-3.5 align-text-bottom"
-                />
-                {{ ratingLabel(trip.driver_rating_avg, trip.driver_rating_count) }}
-                · {{ tripsCountLabel(trip.driver_trips_driven) }} como condutor
-              </p>
-            </div>
 
             <UIcon
               name="i-lucide-chevron-right"
@@ -203,7 +193,7 @@ const options = computed(() => {
 
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Veículo
             </h2>
           </template>
@@ -254,7 +244,7 @@ const options = computed(() => {
         </UCard>
       </div>
 
-      <aside class="space-y-4 lg:sticky lg:top-4 lg:self-start">
+      <aside class="space-y-4 lg:sticky lg:top-26 lg:self-start">
         <TripBookingBox
           :trip="trip"
           :isOwnTrip="isOwnTrip"
@@ -268,5 +258,5 @@ const options = computed(() => {
         <HomePaymentProtected isCompact />
       </aside>
     </div>
-  </UContainer>
+  </UiPage>
 </template>

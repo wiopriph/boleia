@@ -1,56 +1,32 @@
 <script setup lang="ts">
+import type { SectionLink } from '~/components/Ui/SectionShell.vue';
+
+
 definePageMeta({ middleware: 'admin' });
 useSeoMeta({ title: 'Administração', robots: 'noindex' });
 
-const route = useRoute();
 const { data: stats } = await useAdminStats();
 
-const links = computed(() => [
-  { label: 'Resumo', to: '/admin', count: null },
-  { label: 'Verificações', to: '/admin/verificacoes', count: stats.value?.queues.verifications ?? null },
-  { label: 'Denúncias', to: '/admin/denuncias', count: stats.value?.queues.reports_open ?? null },
-  { label: 'Disputas', to: '/admin/disputas', count: stats.value?.queues.disputes ?? null },
-  { label: 'Levantamentos', to: '/admin/levantamentos', count: stats.value?.queues.payouts ?? null },
-  { label: 'Utilizadores', to: '/admin/utilizadores', count: null },
-  { label: 'Dinheiro', to: '/admin/dinheiro', count: stats.value?.queues.refunds_manual ?? null },
-  { label: 'Semanas', to: '/admin/semanas', count: null },
-  { label: 'Locais', to: '/admin/locais', count: null },
+const links = computed<SectionLink[]>(() => [
+  { label: 'Resumo', icon: 'i-lucide-layout-dashboard', to: '/admin', isExact: true },
+  { label: 'Verificações', icon: 'i-lucide-badge-check', to: '/admin/verificacoes', count: stats.value?.queues.verifications },
+  { label: 'Denúncias', icon: 'i-lucide-flag', to: '/admin/denuncias', count: stats.value?.queues.reports_open },
+  { label: 'Disputas', icon: 'i-lucide-scale', to: '/admin/disputas', count: stats.value?.queues.disputes },
+  { label: 'Levantamentos', icon: 'i-lucide-banknote', to: '/admin/levantamentos', count: stats.value?.queues.payouts },
+  { label: 'Utilizadores', icon: 'i-lucide-users', to: '/admin/utilizadores' },
+  { label: 'Dinheiro', icon: 'i-lucide-landmark', to: '/admin/dinheiro', count: stats.value?.queues.refunds_manual },
+  { label: 'Semanas', icon: 'i-lucide-chart-column', to: '/admin/semanas' },
+  { label: 'Locais', icon: 'i-lucide-map-pin', to: '/admin/locais' },
 ]);
-
-function isActive(path: string) {
-  return path === '/admin' ? route.path === '/admin' : route.path.startsWith(path);
-}
 </script>
 
 <template>
-  <UContainer class="max-w-4xl py-6">
-    <nav
-      aria-label="Administração"
-      class="-mx-1 flex gap-1 overflow-x-auto px-1 pb-2"
-    >
-      <UButton
-        v-for="link in links"
-        :key="link.to"
-        :to="link.to"
-        :variant="isActive(link.to) ? 'soft' : 'ghost'"
-        :color="isActive(link.to) ? 'primary' : 'neutral'"
-        class="shrink-0"
-      >
-        {{ link.label }}
-
-        <UBadge
-          v-if="link.count"
-          color="neutral"
-          variant="subtle"
-          size="sm"
-        >
-          {{ link.count }}
-        </UBadge>
-      </UButton>
-    </nav>
-
-    <div class="mt-4">
+  <UiSectionShell
+    title="Administração"
+    :links="links"
+  >
+    <UiPage>
       <NuxtPage />
-    </div>
-  </UContainer>
+    </UiPage>
+  </UiSectionShell>
 </template>

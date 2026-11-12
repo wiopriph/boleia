@@ -70,20 +70,20 @@ function submit() {
 
 <template>
   <form
-    class="grid gap-3"
-    :class="isCompact ? 'sm:grid-cols-[1fr_auto_1fr_10rem_8rem_auto]' : 'sm:grid-cols-2'"
+    class="relative grid grid-cols-2 items-end gap-3"
+    :class="isCompact ? 'lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_10rem_8rem_auto]' : ''"
     @submit.prevent="submit"
   >
     <UFormField
-      :label="isCompact ? undefined : 'De'"
-      class="min-w-0"
+      label="Origem"
+      class="col-span-2 min-w-0 sm:col-span-1"
     >
       <UInputMenu
         v-model="state.from"
         :items="placeItems"
         valueKey="value"
         :filterFields="['label', 'keywords']"
-        placeholder="Cidade de partida"
+        placeholder="De onde sais?"
         icon="i-lucide-circle-dot"
         size="xl"
         class="w-full"
@@ -92,8 +92,8 @@ function submit() {
     </UFormField>
 
     <div
-      class="flex items-end justify-center"
-      :class="isCompact ? '' : 'sm:order-none -my-2 sm:hidden'"
+      class="absolute right-3 top-16 z-10 flex justify-end sm:col-span-1"
+      :class="isCompact ? 'sm:hidden lg:static lg:flex' : 'sm:hidden'"
     >
       <UButton
         type="button"
@@ -101,20 +101,21 @@ function submit() {
         color="neutral"
         icon="i-lucide-arrow-left-right"
         aria-label="Trocar origem e destino"
+        class="rounded-full border border-default bg-default p-2 lg:border-0"
         @click="swap"
       />
     </div>
 
     <UFormField
-      :label="isCompact ? undefined : 'Para'"
-      class="min-w-0"
+      label="Destino"
+      class="col-span-2 min-w-0 sm:col-span-1"
     >
       <UInputMenu
         v-model="state.to"
         :items="placeItems"
         valueKey="value"
         :filterFields="['label', 'keywords']"
-        placeholder="Cidade de chegada"
+        placeholder="Para onde vais?"
         icon="i-lucide-map-pin"
         size="xl"
         class="w-full"
@@ -122,7 +123,10 @@ function submit() {
       />
     </UFormField>
 
-    <UFormField :label="isCompact ? undefined : 'Data'">
+    <UFormField
+      label="Data"
+      class="col-span-2 min-w-0 min-[375px]:col-span-1"
+    >
       <UInput
         v-model="state.date"
         type="date"
@@ -132,7 +136,10 @@ function submit() {
       />
     </UFormField>
 
-    <UFormField :label="isCompact ? undefined : 'Lugares'">
+    <UFormField
+      label="Passageiros"
+      class="col-span-2 min-w-0 min-[375px]:col-span-1"
+    >
       <USelect
         v-model="state.seats"
         :items="seatItems"
@@ -141,20 +148,21 @@ function submit() {
       />
     </UFormField>
 
-    <div class="flex items-end sm:col-span-full sm:justify-end">
-      <UButton
-        type="submit"
-        size="xl"
-        icon="i-lucide-search"
-        :block="!isCompact"
-      >
-        Pesquisar
-      </UButton>
-    </div>
+    <UButton
+      type="submit"
+      size="xl"
+      icon="i-lucide-search"
+      class="col-span-2"
+      :class="isCompact ? 'lg:col-span-1' : ''"
+      block
+    >
+      Procurar boleia
+    </UButton>
 
     <p
       v-if="errorText"
-      class="text-sm text-error sm:col-span-full"
+      role="alert"
+      class="col-span-full text-sm text-error"
     >
       {{ errorText }}
     </p>

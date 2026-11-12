@@ -25,25 +25,42 @@ const menu = computed(() => [
 </script>
 
 <template>
-  <header class="border-b border-default bg-default">
-    <UContainer class="flex h-14 items-center justify-between gap-4">
-      <NuxtLink
-        to="/"
-        class="text-lg font-semibold tracking-tight text-primary"
-      >
-        Boleia
-      </NuxtLink>
+  <header class="sticky top-0 z-40 border-b border-default bg-default">
+    <UContainer class="flex h-18 items-center justify-between gap-3">
+      <AppLogo />
 
-      <nav class="flex items-center gap-2">
+      <nav
+        aria-label="Navegação principal"
+        class="hidden items-center gap-1 md:flex"
+      >
         <UButton
-          to="/publicar"
-          variant="ghost"
+          to="/pesquisa"
           color="neutral"
-          icon="i-lucide-plus"
+          variant="ghost"
+          icon="i-lucide-search"
         >
-          <span class="hidden sm:inline">Publicar viagem</span>
+          Encontrar boleia
         </UButton>
 
+        <UButton
+          to="/publicar"
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-plus"
+        >
+          Oferecer boleia
+        </UButton>
+
+        <UButton
+          to="/faq"
+          color="neutral"
+          variant="ghost"
+        >
+          Como funciona
+        </UButton>
+      </nav>
+
+      <div class="flex items-center gap-1 sm:gap-2">
         <UChip
           v-if="user"
           :show="unreadCount > 0"
@@ -65,23 +82,40 @@ const menu = computed(() => [
           :items="menu"
         >
           <UButton
-            variant="ghost"
-            color="neutral"
+            variant="soft"
             icon="i-lucide-user-round"
             aria-label="A minha conta"
+            trailingIcon="i-lucide-chevron-down"
           >
-            <span class="hidden sm:inline">Conta</span>
+            <span class="hidden sm:inline">A minha conta</span>
           </UButton>
         </UDropdownMenu>
 
         <UButton
           v-else
           to="/entrar"
-          variant="soft"
+          variant="solid"
         >
           Entrar
         </UButton>
-      </nav>
+
+        <UDropdownMenu
+          :items="[
+            { label: 'Encontrar boleia', icon: 'i-lucide-search', to: '/pesquisa' },
+            { label: 'Oferecer boleia', icon: 'i-lucide-plus', to: '/publicar' },
+            { label: 'Como funciona', icon: 'i-lucide-circle-help', to: '/faq' },
+          ]"
+          :content="{ align: 'end' }"
+        >
+          <UButton
+            class="md:hidden"
+            variant="ghost"
+            color="neutral"
+            icon="i-lucide-menu"
+            aria-label="Abrir menu de navegação"
+          />
+        </UDropdownMenu>
+      </div>
     </UContainer>
   </header>
 </template>

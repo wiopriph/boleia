@@ -118,7 +118,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
         />
 
         <div>
-          <h1 class="text-2xl font-semibold">
+          <h1 class="page-title">
             {{ user.display_name }}
           </h1>
 
@@ -176,7 +176,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Verificação e viaturas
         </h2>
       </template>
@@ -234,7 +234,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Viagens como condutor
         </h2>
       </template>
@@ -282,7 +282,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Reservas como passageiro
         </h2>
       </template>
@@ -333,7 +333,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Pagamentos
         </h2>
       </template>
@@ -380,7 +380,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Movimentos de saldo
         </h2>
       </template>
@@ -422,7 +422,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Denúncias recebidas
         </h2>
       </template>
@@ -460,7 +460,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Ações de moderação
         </h2>
       </template>

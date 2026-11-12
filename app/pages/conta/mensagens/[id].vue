@@ -104,9 +104,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mx-auto flex h-[calc(100dvh-3.5rem)] max-w-2xl flex-col">
+  <div class="my-6 flex h-[calc(100dvh-12.5rem)] min-h-96 flex-col overflow-hidden rounded-card border border-default bg-default lg:my-10 lg:h-[calc(100dvh-9.5rem)]">
     <template v-if="!conversation">
-      <UContainer class="py-8">
+      <div class="p-5 sm:p-6">
         <UAlert
           color="neutral"
           variant="soft"
@@ -122,11 +122,11 @@ onMounted(() => {
         >
           Mensagens
         </UButton>
-      </UContainer>
+      </div>
     </template>
 
     <template v-else>
-      <header class="flex items-center gap-3 border-b border-default px-4 py-3">
+      <header class="flex flex-wrap items-center gap-3 border-b border-default px-4 py-3">
         <UButton
           to="/conta/mensagens"
           variant="ghost"
@@ -142,7 +142,7 @@ onMounted(() => {
           icon="i-lucide-user-round"
         />
 
-        <div class="min-w-0 flex-1">
+        <div class="min-w-24 flex-1">
           <p class="truncate font-medium">
             {{ conversation.other_user_name }}
           </p>

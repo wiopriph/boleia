@@ -116,7 +116,7 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
+  <UiPage>
     <UButton
       to="/conta/viagens"
       variant="link"
@@ -143,7 +143,7 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
       </p>
 
       <div class="mt-1 flex items-start justify-between gap-3">
-        <h1 class="text-2xl font-semibold">
+        <h1 class="page-title">
           {{ trip.origin?.name }} <span class="text-muted">para</span> {{ trip.destination?.name }}
         </h1>
 
@@ -302,7 +302,7 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
 
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Passageiros
             </h2>
           </template>
@@ -376,5 +376,5 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
         @cancelled="refreshAll"
       />
     </template>
-  </UContainer>
+  </UiPage>
 </template>

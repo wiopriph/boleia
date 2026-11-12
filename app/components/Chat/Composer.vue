@@ -62,7 +62,7 @@ function onEnter(event: KeyboardEvent) {
         autoresize
         :maxlength="MESSAGE_MAX_LENGTH"
         placeholder="Escreva uma mensagem"
-        class="flex-1"
+        class="min-w-0 flex-1"
         size="lg"
         @keydown.enter="onEnter"
       />

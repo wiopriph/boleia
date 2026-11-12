@@ -55,7 +55,7 @@ const currentAmount = computed(() => formatKz(current.value?.amount_kz ?? 0));
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Levantamentos
     </h1>
 
@@ -72,9 +72,10 @@ const currentAmount = computed(() => formatKz(current.value?.amount_kz ?? 0));
       title="Não foi possível carregar os levantamentos"
     />
 
-    <AdminEmpty
+    <UiEmptyState
       v-else-if="!items.length"
       class="mt-6"
+      icon="i-lucide-check-check"
       title="Sem levantamentos por tratar"
     />
 

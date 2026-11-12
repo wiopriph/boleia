@@ -32,9 +32,12 @@ function onSaved() {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <template v-if="isOnboarding">
-      <h1 class="text-2xl font-semibold">
+  <UiPage>
+    <div
+      v-if="isOnboarding"
+      class="measure-form mx-auto"
+    >
+      <h1 class="page-title">
         Complete o seu perfil
       </h1>
 
@@ -55,12 +58,13 @@ function onSaved() {
           class="h-40 w-full"
         />
       </UCard>
-    </template>
+    </div>
 
     <template v-else>
-      <h1 class="text-2xl font-semibold">
-        O meu perfil
-      </h1>
+      <UiPageHeader
+        title="O meu perfil"
+        description="Os teus dados, veículos e preferências de levantamento."
+      />
 
       <p
         v-if="profile?.phone"
@@ -84,7 +88,7 @@ function onSaved() {
       >
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Dados pessoais
             </h2>
           </template>
@@ -95,7 +99,7 @@ function onSaved() {
         <UCard>
           <template #header>
             <div class="flex items-center justify-between gap-3">
-              <h2 class="font-semibold">
+              <h2 class="card-title">
                 Os meus veículos
               </h2>
 
@@ -115,7 +119,7 @@ function onSaved() {
 
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Método de levantamento
             </h2>
 
@@ -129,7 +133,7 @@ function onSaved() {
 
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Apagar conta
             </h2>
           </template>
@@ -138,5 +142,5 @@ function onSaved() {
         </UCard>
       </div>
     </template>
-  </UContainer>
+  </UiPage>
 </template>

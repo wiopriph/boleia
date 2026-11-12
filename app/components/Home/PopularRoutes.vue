@@ -14,13 +14,14 @@ const { data: routes } = await useAsyncData('popular-routes', async () => {
 
 <template>
   <section v-if="routes?.length">
-    <h2 class="text-lg font-semibold">
+    <h2 class="section-title">
       Rotas populares
     </h2>
 
     <BoleiasRouteList
       :routes="routes"
-      class="mt-3"
+      withImages
+      class="mt-5"
     />
   </section>
 </template>

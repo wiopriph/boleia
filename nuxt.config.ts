@@ -40,6 +40,11 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  // Keep the interface font local: builds and mobile clients need no font CDN.
+  fonts: {
+    families: [{ name: 'Inter', provider: 'none' }],
+  },
+
   compatibilityDate: '2026-06-30',
 
   nitro: {
@@ -69,6 +74,18 @@ export default defineNuxtConfig({
         flowType: 'implicit',
         detectSessionInUrl: false,
       },
+    },
+  },
+
+  ui: {
+    colorMode: false,
+
+    theme: {
+      // colors: ['primary', 'success', 'info', 'warning', 'error'],
+    },
+
+    experimental: {
+      componentDetection: true,
     },
   },
 });

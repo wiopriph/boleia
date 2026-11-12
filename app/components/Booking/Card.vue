@@ -11,9 +11,9 @@ const badgeColor = computed(() => (statusText.value.tone === 'neutral' ? 'neutra
 <template>
   <NuxtLink
     :to="`/conta/reservas/${booking.id}`"
-    class="block rounded-xl border border-default bg-default p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+    class="surface-link"
   >
-    <div class="flex items-start justify-between gap-3">
+    <div class="flex flex-wrap items-start justify-between gap-3">
       <div class="min-w-0">
         <p class="text-sm text-muted">
           {{ formatDateTime(booking.departure_at) }}

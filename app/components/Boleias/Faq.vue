@@ -4,7 +4,7 @@ defineProps<{ items: { question: string, answer: string }[] }>();
 
 <template>
   <section>
-    <h2 class="text-lg font-semibold">
+    <h2 class="section-title">
       Perguntas frequentes
     </h2>
 

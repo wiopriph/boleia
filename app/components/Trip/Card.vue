@@ -11,102 +11,97 @@ const isFull = computed(() => props.trip.status === 'full' || props.trip.seats_a
 <template>
   <NuxtLink
     :to="`/viagem/${trip.id}`"
-    class="block rounded-xl border border-default bg-default p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+    class="surface-link group"
   >
     <div class="flex items-start justify-between gap-4">
-      <div class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
-        <span class="font-semibold tabular-nums">{{ formatTime(trip.departure_at) }}</span>
+      <div class="grid min-w-0 grid-cols-[auto_1fr] gap-x-4 gap-y-4 text-sm">
+        <span class="text-lg font-semibold tabular-nums leading-6">{{ formatTime(trip.departure_at) }}</span>
 
-        <span class="font-medium">
-          {{ trip.origin_name }}
-          <span
+        <div class="relative border-s-2 border-primary/20 ps-4">
+          <span class="absolute -start-[5px] top-2 size-2 rounded-full bg-primary" />
+
+          <p class="font-semibold leading-6">
+            {{ trip.origin_name }}
+          </p>
+
+          <p
             v-if="trip.origin_detail"
-            class="font-normal text-muted"
-          > · {{ trip.origin_detail }}</span>
-        </span>
+            class="mt-0.5 text-xs leading-relaxed text-muted"
+          >
+            {{ trip.origin_detail }}
+          </p>
+        </div>
 
-        <span class="tabular-nums text-muted">{{ arrival ? formatTime(arrival) : '' }}</span>
+        <span class="font-medium tabular-nums text-muted">{{ arrival ? formatTime(arrival) : '—' }}</span>
 
-        <span class="font-medium">
-          {{ trip.destination_name }}
-          <span
+        <div class="relative ps-4">
+          <span class="absolute -start-[3px] top-1.5 size-2 rounded-full border-2 border-primary bg-default" />
+
+          <p class="font-medium">
+            {{ trip.destination_name }}
+          </p>
+
+          <p
             v-if="trip.destination_detail"
-            class="font-normal text-muted"
-          > · {{ trip.destination_detail }}</span>
-        </span>
+            class="mt-0.5 text-xs leading-relaxed text-muted"
+          >
+            {{ trip.destination_detail }}
+          </p>
+        </div>
       </div>
 
       <div class="shrink-0 text-right">
-        <p class="text-lg font-semibold tabular-nums">
+        <p class="text-xl font-semibold tracking-tight tabular-nums">
           {{ formatKz(trip.price_per_seat_kz) }}
         </p>
 
-        <p class="text-xs text-muted">
+        <p class="mt-1 text-xs text-muted">
           por lugar
         </p>
+
+        <p
+          class="mt-3 inline-flex items-center gap-1 text-xs"
+          :class="isFull ? 'text-muted' : 'text-primary'"
+        >
+          <UIcon
+            name="i-lucide-armchair"
+            class="size-4"
+          />{{ seatsLabel(isFull ? 0 : trip.seats_available) }}
+        </p>
       </div>
     </div>
 
-    <div class="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
+    <div class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
       <span
         v-if="trip.duration_minutes"
-        class="inline-flex items-center gap-1"
-      >
-        <UIcon name="i-lucide-clock" />
-        {{ formatDuration(trip.duration_minutes) }}
-      </span>
+        class="inline-flex items-center gap-1.5"
+      ><UIcon
+        name="i-lucide-clock"
+        class="size-3.5"
+      />{{ formatDuration(trip.duration_minutes) }}</span>
 
-      <span class="inline-flex items-center gap-1">
-        <UIcon name="i-lucide-timer" />
-        Espera {{ trip.wait_minutes }} min
-      </span>
+      <span class="inline-flex items-center gap-1.5"><UIcon
+        name="i-lucide-timer"
+        class="size-3.5"
+      />Espera {{ trip.wait_minutes }} min</span>
 
-      <span class="inline-flex items-center gap-1">
-        <UIcon :name="trip.booking_mode === 'instant' ? 'i-lucide-zap' : 'i-lucide-message-square-reply'" />
-        {{ bookingModeLabel(trip.booking_mode) }}
-      </span>
+      <span class="inline-flex items-center gap-1.5"><UIcon
+        :name="trip.booking_mode === 'instant' ? 'i-lucide-zap' : 'i-lucide-message-square-reply'"
+        class="size-3.5"
+      />{{ bookingModeLabel(trip.booking_mode) }}</span>
     </div>
 
-    <USeparator class="my-3" />
+    <div class="mt-4 flex items-center justify-between gap-3 border-t border-default pt-4">
+      <TripDriverSummary :trip="trip" />
 
-    <div class="flex items-center gap-3">
-      <UAvatar
-        :src="trip.driver_avatar_url ?? undefined"
-        :alt="trip.driver_name ?? ''"
-        icon="i-lucide-user-round"
-        size="md"
-      />
+      <span class="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
+        <span class="hidden sm:inline">Ver viagem</span>
 
-      <div class="min-w-0 flex-1 text-sm">
-        <p class="flex flex-wrap items-center gap-x-1.5 font-medium">
-          {{ trip.driver_name }}
-          <UIcon
-            v-if="trip.driver_verified"
-            name="i-lucide-badge-check"
-            class="size-4 text-primary"
-            aria-label="Condutor verificado"
-          />
-        </p>
-
-        <p class="text-muted">
-          <span class="inline-flex items-center gap-0.5">
-            <UIcon
-              name="i-lucide-star"
-              class="size-3.5"
-            />
-            {{ ratingLabel(trip.driver_rating_avg, trip.driver_rating_count) }}
-          </span>
-          · {{ tripsCountLabel(trip.driver_trips_driven) }}
-          <span v-if="!trip.driver_verified"> · Condutor não verificado</span>
-        </p>
-      </div>
-
-      <UBadge
-        :color="isFull ? 'neutral' : 'primary'"
-        variant="subtle"
-      >
-        {{ seatsLabel(isFull ? 0 : trip.seats_available) }}
-      </UBadge>
+        <UIcon
+          name="i-lucide-arrow-right"
+          class="size-5 transition-transform group-hover:translate-x-0.5"
+        />
+      </span>
     </div>
   </NuxtLink>
 </template>

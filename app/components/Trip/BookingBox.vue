@@ -56,6 +56,10 @@ async function reserve() {
 
 <template>
   <UCard>
+    <h2 class="card-title mb-5">
+      A tua reserva
+    </h2>
+
     <template v-if="isOwnTrip">
       <p class="font-medium">
         Esta é a sua viagem
@@ -73,7 +77,7 @@ async function reserve() {
     </template>
 
     <template v-else>
-      <div class="flex items-baseline justify-between">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
         <p class="text-2xl font-semibold tabular-nums">
           {{ formatKz(trip.price_per_seat_kz) }}
         </p>
@@ -96,8 +100,8 @@ async function reserve() {
           />
         </UFormField>
 
-        <dl class="mt-4 space-y-1 text-sm">
-          <div class="flex justify-between">
+        <dl class="mt-5 space-y-3 rounded-control bg-muted p-4 text-sm">
+          <div class="flex flex-wrap justify-between gap-x-4 gap-y-1">
             <dt class="text-muted">
               {{ seats }} x {{ formatKz(trip.price_per_seat_kz) }}
             </dt>
@@ -107,7 +111,7 @@ async function reserve() {
             </dd>
           </div>
 
-          <div class="flex justify-between">
+          <div class="flex flex-wrap justify-between gap-x-4 gap-y-1">
             <dt class="text-muted">
               Taxa de serviço
             </dt>

@@ -32,7 +32,7 @@ async function reveal() {
 <template>
   <UCard>
     <template #header>
-      <h2 class="font-semibold">
+      <h2 class="card-title">
         No dia da viagem
       </h2>
     </template>

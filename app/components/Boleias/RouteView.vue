@@ -84,22 +84,20 @@ const faq = computed(() => {
 
 <template>
   <div>
-    <section class="bg-elevated/50">
-      <UContainer class="max-w-3xl py-8">
-        <nav class="text-sm text-muted">
-          <NuxtLink
-            :to="routePath(stat.origin_slug)"
-            class="hover:text-default"
-          >
-            Boleias {{ placeWith('de', stat.origin_slug, stat.origin_name) }}
-          </NuxtLink>
-        </nav>
+    <section class="page-intro">
+      <UContainer class="py-6 sm:py-8">
+        <NuxtLink
+          :to="routePath(stat.origin_slug)"
+          class="text-sm text-muted transition-colors hover:text-primary"
+        >
+          Boleias {{ placeWith('de', stat.origin_slug, stat.origin_name) }}
+        </NuxtLink>
 
-        <h1 class="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+        <h1 class="page-title mt-2">
           Boleias {{ title }}
         </h1>
 
-        <dl class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <dl class="mt-4 flex flex-wrap gap-x-10 gap-y-3">
           <div
             v-for="fact in facts"
             :key="fact.label"
@@ -114,103 +112,106 @@ const faq = computed(() => {
           </div>
         </dl>
 
-        <UCard class="mt-6">
-          <SearchForm :initial="searchInitial" />
-        </UCard>
+        <SearchForm
+          :initial="searchInitial"
+          class="mt-6"
+          isCompact
+        />
       </UContainer>
     </section>
 
-    <UContainer class="max-w-3xl space-y-10 py-8">
-      <section>
-        <h2 class="text-lg font-semibold">
-          Próximas viagens
-        </h2>
+    <UiPage>
+      <UiSplit>
+        <section>
+          <h2 class="section-title">
+            Próximas viagens
+          </h2>
 
-        <BoleiasTripList
-          v-if="trips.length"
-          :trips="trips"
-          class="mt-4"
-        />
-
-        <div
-          v-else
-          class="mt-3 rounded-xl border border-dashed border-default p-5 text-sm"
-        >
-          <p class="font-medium">
-            Ainda não há viagens marcadas nesta rota.
-          </p>
-
-          <p class="mt-1 text-muted">
-            Vai fazer este caminho de carro? Publique a viagem e divida os custos.
-          </p>
-
-          <UButton
-            to="/publicar"
-            color="neutral"
-            variant="subtle"
-            class="mt-3"
-          >
-            Publicar viagem
-          </UButton>
-        </div>
-      </section>
-
-      <section>
-        <h2 class="text-lg font-semibold">
-          Sobre a viagem {{ title }}
-        </h2>
-
-        <ContentRenderer
-          v-if="text"
-          :value="text"
-          class="mt-1"
-        />
-
-        <p
-          v-else
-          class="mt-3 text-muted"
-        >
-          Na Boleia viaja com condutores que já vão fazer o caminho
-          {{ title }}<template v-if="duration">
-            , uma viagem de cerca de {{ duration }} de carro
-          </template>.
-          Reserva o lugar, paga com Multicaixa Express e o dinheiro fica protegido até chegar ao destino.
-        </p>
-      </section>
-
-      <HomePaymentProtected />
-
-      <BoleiasFaq :items="faq" />
-
-      <section v-if="reverse || otherRoutes.length">
-        <h2 class="text-lg font-semibold">
-          Outras rotas
-        </h2>
-
-        <p
-          v-if="reverse"
-          class="mt-3 text-sm"
-        >
-          <NuxtLink
-            :to="routePath(reverse.origin_slug, reverse.destination_slug)"
-            class="font-medium text-primary"
-          >
-            Viagem de volta: boleias {{ routeTitle(reverse) }}
-          </NuxtLink>
-        </p>
-
-        <template v-if="otherRoutes.length">
-          <h3 class="mt-4 text-sm font-semibold uppercase tracking-wide text-muted">
-            Com partida {{ placeWith('de', stat.origin_slug, stat.origin_name) }}
-          </h3>
-
-          <BoleiasRouteList
-            :routes="otherRoutes"
-            show="destination"
-            class="mt-3"
+          <BoleiasTripList
+            v-if="trips.length"
+            :trips="trips"
+            class="mt-4"
           />
+
+          <UiEmptyState
+            v-else
+            class="mt-4"
+            icon="i-lucide-car-front"
+            title="Ainda não há viagens marcadas nesta rota"
+            description="Vai fazer este caminho de carro? Publique a viagem e divida os custos."
+          >
+            <UButton
+              to="/publicar"
+              variant="soft"
+            >
+              Publicar viagem
+            </UButton>
+          </UiEmptyState>
+        </section>
+
+        <section>
+          <h2 class="section-title">
+            Sobre a viagem {{ title }}
+          </h2>
+
+          <div class="measure-text">
+            <ContentRenderer
+              v-if="text"
+              :value="text"
+              class="mt-1"
+            />
+
+            <p
+              v-else
+              class="mt-3 leading-relaxed text-muted"
+            >
+              Na Boleia viaja com condutores que já vão fazer o caminho
+              {{ title }}<template v-if="duration">
+                , uma viagem de cerca de {{ duration }} de carro
+              </template>.
+              Reserva o lugar, paga com Multicaixa Express e o dinheiro fica protegido até chegar ao destino.
+            </p>
+          </div>
+        </section>
+
+        <BoleiasFaq :items="faq" />
+
+        <template #aside>
+          <HomePaymentProtected isCompact />
+
+          <UCard v-if="reverse || otherRoutes.length">
+            <h2 class="card-title">
+              Outras rotas
+            </h2>
+
+            <NuxtLink
+              v-if="reverse"
+              :to="routePath(reverse.origin_slug, reverse.destination_slug)"
+              class="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary"
+            >
+              <UIcon
+                name="i-lucide-arrow-left-right"
+                class="size-4 shrink-0"
+              />
+
+              Viagem de volta {{ routeTitle(reverse) }}
+            </NuxtLink>
+
+            <template v-if="otherRoutes.length">
+              <h3 class="group-label mt-5">
+                Com partida {{ placeWith('de', stat.origin_slug, stat.origin_name) }}
+              </h3>
+
+              <BoleiasRouteList
+                :routes="otherRoutes"
+                show="destination"
+                class="mt-3"
+                isStacked
+              />
+            </template>
+          </UCard>
         </template>
-      </section>
-    </UContainer>
+      </UiSplit>
+    </UiPage>
   </div>
 </template>

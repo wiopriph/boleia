@@ -19,10 +19,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <h1 class="text-2xl font-semibold">
-      Notificações
-    </h1>
+  <UiPage>
+    <UiPageHeader
+      title="Notificações"
+      description="Acompanha as novidades das tuas viagens e reservas."
+    />
 
     <div
       v-if="status === 'pending' && !items.length"
@@ -74,18 +75,11 @@ onMounted(() => {
       </li>
     </ul>
 
-    <div
+    <UiEmptyState
       v-else
-      class="mt-10 flex flex-col items-center gap-3 text-center text-muted"
-    >
-      <UIcon
-        name="i-lucide-bell-off"
-        class="size-10"
-      />
-
-      <p>
-        Ainda não tem notificações.
-      </p>
-    </div>
-  </UContainer>
+      icon="i-lucide-bell-off"
+      title="Ainda não tem notificações."
+      class="mt-6"
+    />
+  </UiPage>
 </template>

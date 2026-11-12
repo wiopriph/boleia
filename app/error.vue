@@ -14,7 +14,7 @@ const isNotFound = computed(() => props.error.statusCode === 404);
         {{ error.statusCode }}
       </p>
 
-      <h1 class="text-xl font-semibold">
+      <h1 class="page-title">
         {{ isNotFound ? 'Página não encontrada' : 'Algo correu mal' }}
       </h1>
 

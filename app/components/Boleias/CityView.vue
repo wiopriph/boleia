@@ -15,82 +15,82 @@ const fromCity = computed(() => placeWith('de', props.city.slug, props.city.name
 
 <template>
   <div>
-    <section class="bg-elevated/50">
-      <UContainer class="max-w-3xl py-8">
-        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">
+    <section class="page-intro">
+      <UContainer class="py-6 sm:py-8">
+        <h1 class="page-title">
           Boleias {{ fromCity }}
         </h1>
 
-        <p class="mt-2 text-muted">
+        <p class="mt-2 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           Viagens entre cidades com partida {{ fromCity }}, com pagamento protegido por Multicaixa Express.
         </p>
 
-        <UCard class="mt-6">
-          <SearchForm :initial="{ from: city.slug }" />
-        </UCard>
+        <SearchForm
+          :initial="{ from: city.slug }"
+          class="mt-6"
+          isCompact
+        />
       </UContainer>
     </section>
 
-    <UContainer class="max-w-3xl space-y-10 py-8">
-      <section v-if="routesFrom.length">
-        <h2 class="text-lg font-semibold">
-          Destinos com partida {{ fromCity }}
-        </h2>
+    <UiPage>
+      <UiSplit>
+        <section v-if="routesFrom.length">
+          <h2 class="section-title">
+            Destinos com partida {{ fromCity }}
+          </h2>
 
-        <BoleiasRouteList
-          :routes="routesFrom"
-          show="destination"
-          class="mt-3"
-        />
-      </section>
+          <BoleiasRouteList
+            :routes="routesFrom"
+            show="destination"
+            class="mt-4"
+          />
+        </section>
 
-      <section>
-        <h2 class="text-lg font-semibold">
-          Próximas viagens
-        </h2>
+        <section>
+          <h2 class="section-title">
+            Próximas viagens
+          </h2>
 
-        <BoleiasTripList
-          v-if="trips.length"
-          :trips="trips"
-          class="mt-4"
-        />
+          <BoleiasTripList
+            v-if="trips.length"
+            :trips="trips"
+            class="mt-4"
+          />
 
-        <div
-          v-else
-          class="mt-3 rounded-xl border border-dashed border-default p-5 text-sm"
-        >
-          <p class="font-medium">
-            Ainda não há viagens marcadas com partida {{ fromCity }}.
-          </p>
-
-          <p class="mt-1 text-muted">
-            Vai viajar de carro? Publique a viagem e divida os custos.
-          </p>
-
-          <UButton
-            to="/publicar"
-            color="neutral"
-            variant="subtle"
-            class="mt-3"
+          <UiEmptyState
+            v-else
+            class="mt-4"
+            icon="i-lucide-car-front"
+            :title="`Ainda não há viagens marcadas com partida ${fromCity}`"
+            description="Vai viajar de carro? Publique a viagem e divida os custos."
           >
-            Publicar viagem
-          </UButton>
-        </div>
-      </section>
+            <UButton
+              to="/publicar"
+              variant="soft"
+            >
+              Publicar viagem
+            </UButton>
+          </UiEmptyState>
+        </section>
 
-      <section v-if="routesTo.length">
-        <h2 class="text-lg font-semibold">
-          Boleias {{ placeWith('para', city.slug, city.name) }}
-        </h2>
+        <template #aside>
+          <HomePaymentProtected isCompact />
 
-        <BoleiasRouteList
-          :routes="routesTo"
-          show="origin"
-          class="mt-3"
-        />
-      </section>
+          <UCard v-if="routesTo.length">
+            <h2 class="card-title">
+              Boleias {{ placeWith('para', city.slug, city.name) }}
+            </h2>
 
-      <HomePaymentProtected />
-    </UContainer>
+            <BoleiasRouteList
+              :routes="routesTo"
+              show="origin"
+              class="mt-3"
+              isStacked
+            />
+          </UCard>
+        </template>
+      </UiSplit>
+    </UiPage>
   </div>
 </template>

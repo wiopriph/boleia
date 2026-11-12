@@ -22,10 +22,11 @@ useRealtimeBookings(() => {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <h1 class="text-2xl font-semibold">
-      As minhas reservas
-    </h1>
+  <UiPage>
+    <UiPageHeader
+      title="As minhas reservas"
+      description="Os teus lugares reservados e os detalhes de cada viagem."
+    />
 
     <UTabs
       v-model="tab"
@@ -66,19 +67,12 @@ useRealtimeBookings(() => {
       />
     </div>
 
-    <div
+    <UiEmptyState
       v-else
-      class="mt-10 flex flex-col items-center gap-4 text-center"
+      icon="i-lucide-ticket"
+      :title="tab === 'upcoming' ? 'Não tem reservas para as próximas viagens.' : 'Ainda não tem reservas anteriores.'"
+      class="mt-6"
     >
-      <UIcon
-        name="i-lucide-ticket"
-        class="size-10 text-muted"
-      />
-
-      <p class="text-muted">
-        {{ tab === 'upcoming' ? 'Não tem reservas marcadas.' : 'Ainda não tem viagens anteriores.' }}
-      </p>
-
       <UButton
         v-if="tab === 'upcoming'"
         to="/"
@@ -86,6 +80,6 @@ useRealtimeBookings(() => {
       >
         Procurar boleia
       </UButton>
-    </div>
-  </UContainer>
+    </UiEmptyState>
+  </UiPage>
 </template>

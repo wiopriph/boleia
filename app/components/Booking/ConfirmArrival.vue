@@ -37,7 +37,7 @@ async function answer(didHappen: boolean) {
 
 <template>
   <UCard>
-    <h2 class="text-lg font-semibold">
+    <h2 class="card-title">
       Chegou bem?
     </h2>
 

@@ -12,9 +12,9 @@ const seatsSold = computed(() => props.trip.seats_offered - props.trip.seats_ava
 <template>
   <NuxtLink
     :to="`/conta/viagens/${trip.id}`"
-    class="block rounded-xl border border-default bg-default p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+    class="surface-link"
   >
-    <div class="flex items-start justify-between gap-3">
+    <div class="flex flex-wrap items-start justify-between gap-3">
       <div class="min-w-0">
         <p class="text-sm text-muted">
           {{ formatDateTime(trip.departure_at) }}

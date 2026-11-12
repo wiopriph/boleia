@@ -47,7 +47,7 @@ async function runMerge() {
 <template>
   <div>
     <div class="flex flex-wrap items-center justify-between gap-3">
-      <h1 class="text-2xl font-semibold">
+      <h1 class="page-title">
         Locais
       </h1>
 

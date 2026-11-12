@@ -51,7 +51,7 @@ async function onDone() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Disputas
     </h1>
 
@@ -68,9 +68,10 @@ async function onDone() {
       title="Não foi possível carregar as disputas"
     />
 
-    <AdminEmpty
+    <UiEmptyState
       v-else-if="!items.length"
       class="mt-6"
+      icon="i-lucide-check-check"
       title="Sem disputas por resolver"
     />
 
@@ -135,7 +136,7 @@ async function onDone() {
             </li>
           </ul>
 
-          <h3 class="mt-4 text-sm font-semibold">
+          <h3 class="group-label mt-4">
             Conversa
           </h3>
 

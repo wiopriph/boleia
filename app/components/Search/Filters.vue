@@ -5,6 +5,8 @@ import type { TimeOfDay } from '~/utils/trip';
 const props = defineProps<{ prices: number[] }>();
 
 const times = defineModel<TimeOfDay[]>('times', { default: () => [] });
+const isOpen = ref(false);
+
 const maxPrice = defineModel<number | null>('maxPrice', { default: null });
 
 function toggle(value: TimeOfDay) {
@@ -28,25 +30,56 @@ const priceItems = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-2">
-    <UButton
-      v-for="option in TIME_OF_DAY_OPTIONS"
-      :key="option.value"
-      size="sm"
-      :variant="times.includes(option.value) ? 'solid' : 'outline'"
-      :color="times.includes(option.value) ? 'primary' : 'neutral'"
-      :title="option.hint"
-      @click="toggle(option.value)"
-    >
-      {{ option.label }}
-    </UButton>
+  <section class="rounded-card border border-default bg-default p-5">
+    <div class="flex items-center justify-between gap-3">
+      <h2 class="card-title flex items-center gap-2">
+        <UIcon
+          name="i-lucide-sliders-horizontal"
+          class="size-4 text-primary"
+        /> Filtros
+      </h2>
 
-    <USelect
-      v-model="maxPrice"
-      :items="priceItems"
-      size="sm"
-      class="ms-auto w-44"
-      icon="i-lucide-banknote"
-    />
-  </div>
+      <UButton
+        class="lg:hidden"
+        variant="ghost"
+        color="neutral"
+        :icon="isOpen ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+        :aria-expanded="isOpen"
+        aria-label="Mostrar ou ocultar filtros"
+        @click="isOpen = !isOpen"
+      />
+    </div>
+
+    <div
+      class="mt-5 space-y-6"
+      :class="isOpen ? '' : 'hidden lg:block'"
+    >
+      <fieldset class="space-y-3">
+        <legend class="mb-3 text-sm font-semibold">
+          Horário de partida
+        </legend>
+
+        <UCheckbox
+          v-for="option in TIME_OF_DAY_OPTIONS"
+          :key="option.value"
+          :modelValue="times.includes(option.value)"
+          :label="option.label"
+          :description="option.hint"
+          :ui="{ root: 'min-h-11' }"
+          @update:model-value="toggle(option.value)"
+        />
+      </fieldset>
+
+      <USeparator />
+
+      <UFormField label="Preço por lugar">
+        <USelect
+          v-model="maxPrice"
+          :items="priceItems"
+          class="w-full"
+          icon="i-lucide-banknote"
+        />
+      </UFormField>
+    </div>
+  </section>
 </template>

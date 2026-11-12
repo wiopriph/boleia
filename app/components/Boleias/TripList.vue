@@ -13,7 +13,7 @@ const groups = computed(() => groupTripsByDay(props.trips));
       v-for="group in groups"
       :key="group.day"
     >
-      <h3 class="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h3 class="group-label mb-3">
         {{ formatDayLong(group.day) }}
       </h3>
 

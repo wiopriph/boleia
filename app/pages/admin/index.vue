@@ -34,7 +34,7 @@ const periods = computed(() => {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Resumo
     </h1>
 
@@ -49,7 +49,7 @@ const periods = computed(() => {
     />
 
     <template v-else>
-      <h2 class="mt-6 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h2 class="group-label mt-6">
         Filas
       </h2>
 
@@ -69,7 +69,7 @@ const periods = computed(() => {
         </li>
       </ul>
 
-      <h2 class="mt-8 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h2 class="group-label mt-8">
         Atividade
       </h2>
 
@@ -110,7 +110,7 @@ const periods = computed(() => {
         </table>
       </UCard>
 
-      <h2 class="mt-8 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h2 class="group-label mt-8">
         Estado do sistema
       </h2>
 

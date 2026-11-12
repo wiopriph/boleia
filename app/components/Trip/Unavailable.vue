@@ -6,7 +6,7 @@
     />
 
     <div>
-      <h1 class="text-xl font-semibold">
+      <h1 class="page-title">
         Esta viagem já não está disponível
       </h1>
 

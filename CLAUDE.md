@@ -24,6 +24,9 @@ RPC, Edge Functions); there is no API server, the client talks to Supabase direc
 - Only pt-AO, texts live in components. Money as `8 000 Kz` (`formatKz`), time in Africa/Luanda
   (`app/utils/dates.ts`). Statuses and money always in words and digits, never color alone.
 - Nuxt UI components only (Lucide icons), one accent color, mobile first, one primary action per screen.
+- Design system: `docs/design-system.md`. Every page is `UiPage` (same 1200px container, no `max-w-*`
+  on a page), side context goes to `UiSplit`, account and admin share `UiSectionShell`; type, radii
+  and spacing only from the tokens in `app/assets/css/main.css`.
 - Secrets: only `SUPABASE_URL` and the anon key via `.env`, never committed.
 - Missing field or RPC: stop and describe what boleia-db needs; no client-side workarounds.
 - SSR data must be the value returned from `useAsyncData` (or live in `useState`): refs filled as a

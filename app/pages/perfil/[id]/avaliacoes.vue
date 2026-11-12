@@ -44,62 +44,64 @@ useSeoMeta({
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <UButton
-      :to="`/perfil/${profileId}`"
-      variant="link"
-      color="neutral"
-      icon="i-lucide-arrow-left"
-      class="-ms-2"
-    >
-      {{ profile?.display_name ?? 'Perfil' }}
-    </UButton>
-
-    <h1 class="mt-2 text-2xl font-semibold">
-      Avaliações
-    </h1>
-
-    <p
-      v-if="profile"
-      class="mt-1 text-muted"
-    >
-      <UIcon
-        name="i-lucide-star"
-        class="size-4 align-text-bottom"
-      />
-      {{ ratingLabel(profile.rating_avg, profile.rating_count) }}
-    </p>
-
-    <ul
-      v-if="reviews.length"
-      class="mt-4 divide-y divide-default"
-    >
-      <ReviewItem
-        v-for="review in reviews"
-        :key="review.id ?? ''"
-        :review="review"
-      />
-    </ul>
-
-    <p
-      v-else
-      class="mt-8 text-center text-muted"
-    >
-      Ainda não há avaliações públicas.
-    </p>
-
-    <div
-      v-if="hasMore"
-      class="mt-4 flex justify-center"
-    >
+  <UiPage>
+    <div class="measure-text">
       <UButton
-        variant="soft"
+        :to="`/perfil/${profileId}`"
+        variant="link"
         color="neutral"
-        :loading="isLoadingMore"
-        @click="loadMore"
+        icon="i-lucide-arrow-left"
+        class="-ms-2"
       >
-        Mostrar mais
+        {{ profile?.display_name ?? 'Perfil' }}
       </UButton>
+
+      <h1 class="page-title mt-2">
+        Avaliações
+      </h1>
+
+      <p
+        v-if="profile"
+        class="mt-1 text-muted"
+      >
+        <UIcon
+          name="i-lucide-star"
+          class="size-4 align-text-bottom"
+        />
+        {{ ratingLabel(profile.rating_avg, profile.rating_count) }}
+      </p>
+
+      <ul
+        v-if="reviews.length"
+        class="mt-4 divide-y divide-default"
+      >
+        <ReviewItem
+          v-for="review in reviews"
+          :key="review.id ?? ''"
+          :review="review"
+        />
+      </ul>
+
+      <p
+        v-else
+        class="mt-8 text-center text-muted"
+      >
+        Ainda não há avaliações públicas.
+      </p>
+
+      <div
+        v-if="hasMore"
+        class="mt-4 flex justify-center"
+      >
+        <UButton
+          variant="soft"
+          color="neutral"
+          :loading="isLoadingMore"
+          @click="loadMore"
+        >
+          Mostrar mais
+        </UButton>
+      </div>
     </div>
-  </UContainer>
+  </UiPage>
 </template>

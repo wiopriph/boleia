@@ -53,27 +53,20 @@ useSeoMeta({
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <div
+  <UiPage>
+    <UiEmptyState
       v-if="!profile"
-      class="flex flex-col items-center gap-4 py-12 text-center"
+      icon="i-lucide-user-round-x"
+      title="Perfil não encontrado"
+      description="O endereço pode estar errado ou a conta já não existe."
     >
-      <UIcon
-        name="i-lucide-user-round-x"
-        class="size-10 text-muted"
-      />
-
-      <h1 class="text-xl font-semibold">
-        Perfil não encontrado
-      </h1>
-
       <UButton
         to="/"
         variant="soft"
       >
         Voltar ao início
       </UButton>
-    </div>
+    </UiEmptyState>
 
     <template v-else>
       <div class="flex items-center gap-4">
@@ -85,7 +78,7 @@ useSeoMeta({
         />
 
         <div class="min-w-0 flex-1">
-          <h1 class="flex flex-wrap items-center gap-2 text-2xl font-semibold">
+          <h1 class="page-title flex flex-wrap items-center gap-2">
             {{ profile.display_name }}
             <UBadge
               v-if="profile.driver_verified"
@@ -97,7 +90,7 @@ useSeoMeta({
             </UBadge>
           </h1>
 
-          <p class="text-sm text-muted">
+          <p class="mt-1 text-sm text-muted">
             Membro desde {{ formatMonthYear(profile.member_since ?? '') }}<template v-if="ageGroup">
               · {{ ageGroup }}
             </template>
@@ -107,154 +100,158 @@ useSeoMeta({
 
       <p
         v-if="profile.bio"
-        class="mt-4 whitespace-pre-wrap"
+        class="measure-text mt-4 whitespace-pre-wrap leading-relaxed"
       >
         {{ profile.bio }}
       </p>
 
-      <UCard class="mt-5">
-        <dl class="grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
-          <div>
-            <dt class="text-muted">
-              Avaliação
-            </dt>
-
-            <dd class="font-medium">
-              <UIcon
-                name="i-lucide-star"
-                class="size-3.5 align-text-bottom"
-              />
-              {{ ratingLabel(profile.rating_avg, profile.rating_count) }}
-            </dd>
-          </div>
-
-          <div>
-            <dt class="text-muted">
-              Como condutor
-            </dt>
-
-            <dd class="font-medium">
-              {{ tripsCountLabel(profile.trips_driven) }}
-            </dd>
-          </div>
-
-          <div>
-            <dt class="text-muted">
-              Como passageiro
-            </dt>
-
-            <dd class="font-medium">
-              {{ tripsCountLabel(profile.trips_ridden) }}
-            </dd>
-          </div>
-
-          <div>
-            <dt class="text-muted">
-              Cancelamentos
-            </dt>
-
-            <dd class="font-medium">
-              {{ cancelBadge ?? 'Sem histórico' }}
-            </dd>
-          </div>
-        </dl>
-
-        <ul class="mt-4 space-y-1.5 text-sm">
-          <li class="flex items-center gap-2">
-            <UIcon
-              name="i-lucide-phone"
-              class="size-4 text-success"
-            />
-            Número de telemóvel confirmado
-          </li>
-
-          <li class="flex items-center gap-2">
-            <UIcon
-              :name="profile.driver_verified ? 'i-lucide-badge-check' : 'i-lucide-badge'"
-              class="size-4"
-              :class="profile.driver_verified ? 'text-success' : 'text-muted'"
-            />
-            {{ profile.driver_verified ? 'Documento, carta de condução e veículo verificados' : 'Documentos de condutor ainda não verificados' }}
-          </li>
-        </ul>
-      </UCard>
-
-      <UCard class="mt-4">
-        <template #header>
-          <div class="flex items-center justify-between gap-3">
-            <h2 class="font-semibold">
-              Avaliações
-            </h2>
-
-            <UButton
-              v-if="(profile.rating_count ?? 0) > REVIEWS_PREVIEW"
-              :to="`/perfil/${profile.id}/avaliacoes`"
-              variant="link"
-              color="neutral"
-              trailingIcon="i-lucide-chevron-right"
-            >
-              Ver todas ({{ profile.rating_count }})
-            </UButton>
-          </div>
-        </template>
-
-        <ul
-          v-if="reviews.length"
-          class="divide-y divide-default"
-        >
-          <ReviewItem
-            v-for="review in reviews"
-            :key="review.id ?? ''"
-            :review="review"
-          />
-        </ul>
-
-        <p
-          v-else
-          class="text-sm text-muted"
-        >
-          Ainda não tem avaliações públicas. Uma avaliação fica visível quando as duas pessoas avaliam ou 14 dias depois da viagem.
-        </p>
-      </UCard>
-
-      <section
-        v-if="trips.length"
+      <UiSplit
         class="mt-6"
+        isAsideFirstOnPhone
       >
-        <h2 class="mb-3 font-semibold">
-          Próximas viagens
-        </h2>
+        <UCard>
+          <template #header>
+            <div class="flex items-center justify-between gap-3">
+              <h2 class="card-title">
+                Avaliações
+              </h2>
 
-        <div class="space-y-3">
-          <TripCard
-            v-for="trip in trips"
-            :key="trip.id ?? ''"
-            :trip="trip"
-          />
-        </div>
-      </section>
+              <UButton
+                v-if="(profile.rating_count ?? 0) > REVIEWS_PREVIEW"
+                :to="`/perfil/${profile.id}/avaliacoes`"
+                variant="link"
+                color="neutral"
+                trailingIcon="i-lucide-chevron-right"
+              >
+                Ver todas ({{ profile.rating_count }})
+              </UButton>
+            </div>
+          </template>
 
-      <div class="mt-6 flex justify-center">
-        <UButton
-          v-if="isOwnProfile"
-          to="/conta/perfil"
-          variant="soft"
-          color="neutral"
-          icon="i-lucide-pencil"
-        >
-          Editar o meu perfil
-        </UButton>
+          <ul
+            v-if="reviews.length"
+            class="divide-y divide-default"
+          >
+            <ReviewItem
+              v-for="review in reviews"
+              :key="review.id ?? ''"
+              :review="review"
+            />
+          </ul>
 
-        <UButton
-          v-else
-          variant="ghost"
-          color="neutral"
-          icon="i-lucide-flag"
-          @click="openReport"
-        >
-          Denunciar
-        </UButton>
-      </div>
+          <p
+            v-else
+            class="text-sm leading-relaxed text-muted"
+          >
+            Ainda não tem avaliações públicas. Uma avaliação fica visível quando as duas pessoas avaliam ou 14 dias depois da viagem.
+          </p>
+        </UCard>
+
+        <section v-if="trips.length">
+          <h2 class="section-title">
+            Próximas viagens
+          </h2>
+
+          <div class="mt-4 space-y-3">
+            <TripCard
+              v-for="trip in trips"
+              :key="trip.id ?? ''"
+              :trip="trip"
+            />
+          </div>
+        </section>
+
+        <template #aside>
+          <UCard>
+            <dl class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <dt class="text-muted">
+                  Avaliação
+                </dt>
+
+                <dd class="font-medium">
+                  <UIcon
+                    name="i-lucide-star"
+                    class="size-3.5 align-text-bottom"
+                  />
+                  {{ ratingLabel(profile.rating_avg, profile.rating_count) }}
+                </dd>
+              </div>
+
+              <div>
+                <dt class="text-muted">
+                  Cancelamentos
+                </dt>
+
+                <dd class="font-medium">
+                  {{ cancelBadge ?? 'Sem histórico' }}
+                </dd>
+              </div>
+
+              <div>
+                <dt class="text-muted">
+                  Como condutor
+                </dt>
+
+                <dd class="font-medium">
+                  {{ tripsCountLabel(profile.trips_driven) }}
+                </dd>
+              </div>
+
+              <div>
+                <dt class="text-muted">
+                  Como passageiro
+                </dt>
+
+                <dd class="font-medium">
+                  {{ tripsCountLabel(profile.trips_ridden) }}
+                </dd>
+              </div>
+            </dl>
+
+            <ul class="mt-5 space-y-2 border-t border-default pt-5 text-sm">
+              <li class="flex items-start gap-2">
+                <UIcon
+                  name="i-lucide-phone"
+                  class="mt-0.5 size-4 shrink-0 text-success"
+                />
+                Número de telemóvel confirmado
+              </li>
+
+              <li class="flex items-start gap-2">
+                <UIcon
+                  :name="profile.driver_verified ? 'i-lucide-badge-check' : 'i-lucide-badge'"
+                  class="mt-0.5 size-4 shrink-0"
+                  :class="profile.driver_verified ? 'text-success' : 'text-muted'"
+                />
+                {{ profile.driver_verified ? 'Documento, carta de condução e veículo verificados' : 'Documentos de condutor ainda não verificados' }}
+              </li>
+            </ul>
+          </UCard>
+
+          <UButton
+            v-if="isOwnProfile"
+            to="/conta/perfil"
+            variant="soft"
+            color="neutral"
+            icon="i-lucide-pencil"
+            block
+          >
+            Editar o meu perfil
+          </UButton>
+
+          <UButton
+            v-else
+            variant="ghost"
+            color="neutral"
+            icon="i-lucide-flag"
+            block
+            @click="openReport"
+          >
+            Denunciar
+          </UButton>
+        </template>
+      </UiSplit>
 
       <ProfileReportModal
         v-model:open="isReportOpen"
@@ -262,5 +259,5 @@ useSeoMeta({
         :targetName="profile.display_name ?? ''"
       />
     </template>
-  </UContainer>
+  </UiPage>
 </template>

@@ -45,7 +45,7 @@ function vehicleLine(item: AdminVerification) {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Verificações
     </h1>
 
@@ -62,9 +62,10 @@ function vehicleLine(item: AdminVerification) {
       title="Não foi possível carregar os pedidos"
     />
 
-    <AdminEmpty
+    <UiEmptyState
       v-else-if="!items.length"
       class="mt-6"
+      icon="i-lucide-check-check"
       title="Sem pedidos de verificação pendentes"
     />
 

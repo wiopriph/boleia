@@ -56,7 +56,7 @@ async function onModerated() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Denúncias
     </h1>
 
@@ -73,9 +73,10 @@ async function onModerated() {
       title="Não foi possível carregar as denúncias"
     />
 
-    <AdminEmpty
+    <UiEmptyState
       v-else-if="!items.length"
       class="mt-6"
+      icon="i-lucide-check-check"
       title="Sem denúncias por tratar"
     />
 
@@ -128,7 +129,7 @@ async function onModerated() {
               · {{ formatKz(item.booking.paid_total_kz) }} pagos
             </p>
 
-            <h3 class="mt-4 text-sm font-semibold">
+            <h3 class="group-label mt-4">
               Conversa
             </h3>
 

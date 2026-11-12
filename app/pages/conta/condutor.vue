@@ -102,10 +102,11 @@ async function send() {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <h1 class="text-2xl font-semibold">
-      Verificação de condutor
-    </h1>
+  <UiPage>
+    <UiPageHeader
+      title="Verificação de condutor"
+      description="Ganha a confiança dos passageiros com os teus documentos verificados."
+    />
 
     <p class="mt-1 text-muted">
       É opcional. Com a verificação ganha o selo no perfil e nas viagens e aparece primeiro nos resultados à mesma hora.
@@ -151,7 +152,7 @@ async function send() {
             Passo 1 de 3
           </p>
 
-          <h2 class="font-semibold">
+          <h2 class="card-title">
             Veículo
           </h2>
         </template>
@@ -200,7 +201,7 @@ async function send() {
             Passo 2 de 3 · {{ uploadedCount }} de 4 enviados
           </p>
 
-          <h2 class="font-semibold">
+          <h2 class="card-title">
             Documentos
           </h2>
 
@@ -248,7 +249,7 @@ async function send() {
             Passo 3 de 3
           </p>
 
-          <h2 class="font-semibold">
+          <h2 class="card-title">
             Método de levantamento
           </h2>
         </template>
@@ -308,5 +309,5 @@ async function send() {
     </div>
 
     <ProfileVehicleForm v-model:open="isVehicleFormOpen" />
-  </UContainer>
+  </UiPage>
 </template>

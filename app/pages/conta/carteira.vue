@@ -67,17 +67,18 @@ async function onRequested() {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <h1 class="text-2xl font-semibold">
-      Carteira
-    </h1>
+  <UiPage>
+    <UiPageHeader
+      title="Carteira"
+      description="Consulta os teus ganhos, levantamentos e movimentos."
+    />
 
     <UCard class="mt-5">
       <p class="text-sm text-muted">
         Disponível para levantar
       </p>
 
-      <p class="mt-1 text-4xl font-semibold tabular-nums">
+      <p class="mt-2 break-words text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl">
         {{ formatKz(balance) }}
       </p>
 
@@ -98,7 +99,7 @@ async function onRequested() {
 
       <USeparator class="my-4" />
 
-      <dl class="grid grid-cols-3 gap-3 text-sm">
+      <dl class="grid gap-4 text-sm min-[430px]:grid-cols-3">
         <div>
           <dt class="text-muted">
             Em espera
@@ -145,7 +146,7 @@ async function onRequested() {
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Levantamentos
         </h2>
       </template>
@@ -191,7 +192,7 @@ async function onRequested() {
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Movimentos
         </h2>
       </template>
@@ -254,5 +255,5 @@ async function onRequested() {
       :payoutMethod="payoutMethod"
       @requested="onRequested"
     />
-  </UContainer>
+  </UiPage>
 </template>

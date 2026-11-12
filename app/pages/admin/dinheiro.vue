@@ -93,13 +93,13 @@ async function exportCsv() {
 
 <template>
   <div>
-    <h1 class="text-2xl font-semibold">
+    <h1 class="page-title">
       Dinheiro
     </h1>
 
     <UCard class="mt-5">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Saldos por conta
         </h2>
       </template>
@@ -158,7 +158,7 @@ async function exportCsv() {
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Reembolsos por entregar
         </h2>
       </template>
@@ -237,7 +237,7 @@ async function exportCsv() {
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Levantamentos
         </h2>
       </template>
@@ -260,7 +260,7 @@ async function exportCsv() {
 
     <UCard class="mt-4">
       <template #header>
-        <h2 class="font-semibold">
+        <h2 class="card-title">
           Exportar movimentos
         </h2>
       </template>

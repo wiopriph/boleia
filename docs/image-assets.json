@@ -1,0 +1,24 @@
+{
+  "generator": "Built-in image_gen tool",
+  "purpose": "Decorative photographic imagery inspired by Angola; not documentary photographs of specific route endpoints.",
+  "assets": [
+    {
+      "name": "road",
+      "file": "public/images/angola-road.webp",
+      "source": "exec-a01edac4-8332-4160-9ebb-f4d74e8e8e25.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: panoramic background photograph for Boleia, a clean intercity carpooling website in Angola. Primary request: a beautiful, believable intercity road through the Angolan highlands, seen at human eye level, in soft late afternoon daylight. Scene: a gently curving paved road, warm natural grasses, scattered green trees and distant rocky plateaus, clear pale sky. Composition: wide landscape 3:2 photograph, the road and scenic detail occupy the RIGHT HALF; the left half has calm pale sky and low contrast distant landscape for dark website headline overlay. The photo will be cropped into a very wide banner, so keep important scenic features in the central horizontal band. Medium: natural editorial travel photography, subtle warm light, real road texture, restrained colors, fine natural detail. Mood: calm, inviting, open, reliable. No people, no cars close to camera, no fictional landmarks, no road signs, no buildings, no text, no logos, no watermarks, no graphic elements, no UI. This is a decorative landscape inspired by Angola, not a documentary image of a specific named place."
+    },
+    {
+      "name": "highlands",
+      "file": "public/images/angola-highlands.webp",
+      "source": "exec-a51d4b21-582a-4a95-87a5-e662d9050fdf.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: decorative route-card photograph for a restrained Angolan travel website. Primary request: wide natural travel photograph of the green Angolan highlands with a sunlit rocky escarpment in the middle distance, savanna grasses and scattered trees in foreground. Calm blue sky, warm soft morning light, realistic fine detail and natural restrained colors. Landscape composition 3:2, strong recognizable silhouette in the central horizontal band so it reads when cropped to a shallow panoramic card. No people, no cars, no buildings, no signs, no text, no logos, no watermark, no fake city skyline. This is an atmospheric AI landscape inspired by Angola, not a documentary photo of a specific named place."
+    },
+    {
+      "name": "coast",
+      "file": "public/images/angola-coast.webp",
+      "source": "exec-82a43410-8db5-4d21-8fab-ec98b8c27d1e.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: decorative route-card photograph for a restrained Angolan travel website. Primary request: a calm beautiful Angolan Atlantic coastline, a sweeping sandy bay with turquoise-blue sea, low ochre cliffs and sparse green coastal vegetation, seen from a gently elevated viewpoint. Natural editorial travel photography, clear soft daylight, realistic textures, restrained warm colors, welcoming mood. Wide landscape composition 3:2, shoreline runs diagonally through central horizontal band, suitable for cropping into shallow panoramic route cards. No people, no boats, no cars, no buildings, no signs, no text, no logos, no watermark. This is an atmospheric AI landscape inspired by Angola, not a documentary photo of a specific named place."
+    }
+  ]
+}

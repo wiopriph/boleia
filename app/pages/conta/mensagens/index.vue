@@ -9,10 +9,11 @@ const { data: conversations, status, error } = await useAsyncData('conversations
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
-    <h1 class="text-2xl font-semibold">
-      Mensagens
-    </h1>
+  <UiPage>
+    <UiPageHeader
+      title="Mensagens"
+      description="Combina os detalhes da viagem com o condutor ou os passageiros."
+    />
 
     <div
       v-if="status === 'pending' && !conversations.length"
@@ -47,25 +48,19 @@ const { data: conversations, status, error } = await useAsyncData('conversations
       </li>
     </ul>
 
-    <div
+    <UiEmptyState
       v-else
-      class="mt-10 flex flex-col items-center gap-3 text-center text-muted"
+      icon="i-lucide-message-circle"
+      title="Ainda não tem conversas"
+      description="Pode perguntar a um condutor na página da viagem."
+      class="mt-6"
     >
-      <UIcon
-        name="i-lucide-message-circle"
-        class="size-10"
-      />
-
-      <p>
-        Ainda não tem conversas. Pode perguntar a um condutor na página da viagem.
-      </p>
-
       <UButton
         to="/"
         icon="i-lucide-search"
       >
         Procurar boleia
       </UButton>
-    </div>
-  </UContainer>
+    </UiEmptyState>
+  </UiPage>
 </template>

@@ -79,8 +79,12 @@ useSeoMeta({
 
 <template>
   <div>
-    <div class="border-b border-default bg-elevated/50">
-      <UContainer class="py-4">
+    <div class="page-intro">
+      <UContainer class="py-6 sm:py-8">
+        <p class="eyebrow mb-4">
+          Encontra o teu caminho
+        </p>
+
         <SearchForm
           :initial="params ?? {}"
           isCompact
@@ -88,8 +92,14 @@ useSeoMeta({
       </UContainer>
     </div>
 
-    <UContainer class="py-6">
+    <UiPage>
       <template v-if="!params || !isRouteKnown">
+        <UiPageHeader
+          title="Encontrar boleia"
+          description="Escolhe o teu caminho e encontra uma viagem entre cidades."
+          class="mb-6"
+        />
+
         <UAlert
           color="neutral"
           variant="soft"
@@ -100,7 +110,7 @@ useSeoMeta({
       </template>
 
       <template v-else>
-        <h1 class="text-xl font-semibold">
+        <h1 class="page-title">
           {{ origin!.name }} <span class="text-muted">para</span> {{ destination!.name }}
         </h1>
 
@@ -130,86 +140,84 @@ useSeoMeta({
         />
 
         <template v-else-if="trips.length">
-          <SearchFilters
-            v-model:times="times"
-            v-model:maxPrice="maxPrice"
-            :prices="prices"
-            class="mt-5"
-          />
-
-          <p
-            v-if="!filtered.length"
-            class="mt-8 text-center text-muted"
-          >
-            Nenhuma viagem corresponde aos filtros.
-            <UButton
-              variant="link"
-              @click="times = []; maxPrice = null"
-            >
-              Limpar filtros
-            </UButton>
-          </p>
-
-          <section
-            v-for="group in groups"
-            :key="group.day"
-            class="mt-6"
-          >
-            <h2 class="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
-              {{ formatDayLong(group.day) }}
-            </h2>
-
-            <div class="space-y-3">
-              <TripCard
-                v-for="trip in group.items"
-                :key="trip.id"
-                :trip="trip"
+          <div class="mt-6 grid items-start gap-6 lg:grid-cols-[15rem_minmax(0,1fr)]">
+            <aside>
+              <SearchFilters
+                v-model:times="times"
+                v-model:maxPrice="maxPrice"
+                :prices="prices"
+                class="lg:sticky lg:top-26"
               />
+            </aside>
+
+            <div class="min-w-0">
+              <p class="text-sm text-muted">
+                {{ filtered.length }} {{ filtered.length === 1 ? 'boleia encontrada' : 'boleias encontradas' }} nos dias pesquisados
+              </p>
+
+              <p
+                v-if="!filtered.length"
+                class="mt-8 text-center text-muted"
+              >
+                Nenhuma viagem corresponde aos filtros.
+                <UButton
+                  variant="link"
+                  @click="times = []; maxPrice = null"
+                >
+                  Limpar filtros
+                </UButton>
+              </p>
+
+              <section
+                v-for="group in groups"
+                :key="group.day"
+                class="mt-5"
+              >
+                <h2 class="group-label mb-3">
+                  {{ formatDayLong(group.day) }}
+                </h2>
+
+                <div class="space-y-3">
+                  <TripCard
+                    v-for="trip in group.items"
+                    :key="trip.id"
+                    :trip="trip"
+                  />
+                </div>
+              </section>
+
+              <div
+                v-if="hasMore"
+                class="mt-6 flex justify-center"
+              >
+                <UButton
+                  variant="soft"
+                  color="neutral"
+                  :loading="isLoadingMore"
+                  @click="loadMore"
+                >
+                  Mostrar mais
+                </UButton>
+              </div>
+
+              <p
+                v-else-if="hasActiveFilters"
+                class="mt-6 text-center text-xs text-muted"
+              >
+                Os filtros aplicam-se às viagens já carregadas.
+              </p>
             </div>
-          </section>
-
-          <div
-            v-if="hasMore"
-            class="mt-6 flex justify-center"
-          >
-            <UButton
-              variant="soft"
-              color="neutral"
-              :loading="isLoadingMore"
-              @click="loadMore"
-            >
-              Mostrar mais
-            </UButton>
           </div>
-
-          <p
-            v-else-if="hasActiveFilters"
-            class="mt-6 text-center text-xs text-muted"
-          >
-            Os filtros aplicam-se às viagens já carregadas.
-          </p>
         </template>
 
-        <div
+        <UiEmptyState
           v-else
-          class="mt-10 flex flex-col items-center gap-4 text-center"
+          icon="i-lucide-calendar-x"
+          title="Sem boleias nesta data"
+          description="Experimente os dias à volta ou volte mais tarde: os condutores publicam até ao próprio dia."
+          class="mt-8"
         >
-          <UIcon
-            name="i-lucide-calendar-x"
-            class="size-10 text-muted"
-          />
-
-          <div>
-            <p class="font-medium">
-              Sem boleias nesta data
-            </p>
-
-            <p class="text-sm text-muted">
-              Experimente os dias à volta ou volte mais tarde: os condutores publicam até ao próprio dia.
-            </p>
-          </div>
-
-          <div class="flex gap-2">
+          <div class="flex flex-wrap justify-center gap-2">
             <UButton
               v-if="canGoToPreviousDay"
               variant="soft"
@@ -229,8 +237,8 @@ useSeoMeta({
               Dia seguinte
             </UButton>
           </div>
-        </div>
+        </UiEmptyState>
       </template>
-    </UContainer>
+    </UiPage>
   </div>
 </template>

@@ -42,7 +42,7 @@ function placeName(slug: string) {
 <template>
   <div>
     <div class="flex flex-wrap items-center justify-between gap-3">
-      <h1 class="text-2xl font-semibold">
+      <h1 class="page-title">
         Semanas
       </h1>
 
@@ -77,14 +77,14 @@ function placeName(slug: string) {
       >
         <UCard>
           <template #header>
-            <h2 class="font-semibold">
+            <h2 class="card-title">
               Semana de {{ formatDateLong(week.week_start) }}
             </h2>
           </template>
 
           <div class="grid gap-5 text-sm sm:grid-cols-2">
             <section>
-              <h3 class="text-xs font-semibold uppercase tracking-wide text-muted">
+              <h3 class="group-label">
                 Funil
               </h3>
 
@@ -152,7 +152,7 @@ function placeName(slug: string) {
             </section>
 
             <section>
-              <h3 class="text-xs font-semibold uppercase tracking-wide text-muted">
+              <h3 class="group-label">
                 Dinheiro
               </h3>
 
@@ -188,7 +188,7 @@ function placeName(slug: string) {
                 </div>
               </dl>
 
-              <h3 class="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">
+              <h3 class="group-label mt-4">
                 Cancelamentos
               </h3>
 
@@ -226,7 +226,7 @@ function placeName(slug: string) {
             </section>
 
             <section>
-              <h3 class="text-xs font-semibold uppercase tracking-wide text-muted">
+              <h3 class="group-label">
                 Tempos médios
               </h3>
 
@@ -254,7 +254,7 @@ function placeName(slug: string) {
             </section>
 
             <section>
-              <h3 class="text-xs font-semibold uppercase tracking-wide text-muted">
+              <h3 class="group-label">
                 Rotas com mais reservas pagas
               </h3>
 

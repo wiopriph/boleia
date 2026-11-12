@@ -42,7 +42,7 @@ useRealtimeBookings((change) => {
 </script>
 
 <template>
-  <UContainer class="max-w-2xl py-8">
+  <UiPage>
     <UButton
       to="/conta/reservas"
       variant="link"
@@ -69,7 +69,7 @@ useRealtimeBookings((change) => {
         {{ formatDayLong(booking.departure_at) }}
       </p>
 
-      <h1 class="mt-1 text-2xl font-semibold">
+      <h1 class="page-title mt-1">
         {{ booking.origin_name }} <span class="text-muted">para</span> {{ booking.destination_name }}
       </h1>
 
@@ -283,5 +283,5 @@ useRealtimeBookings((change) => {
         />
       </div>
     </template>
-  </UContainer>
+  </UiPage>
 </template>
