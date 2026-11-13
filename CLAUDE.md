@@ -66,6 +66,9 @@ Deploy target is Cloudflare Workers (`wrangler.jsonc`).
   trips are `noindex, follow` (trips expire in days, their value is the share preview). Each public
   page calls `defineOgImage('Page', { title, subtitle })` itself: an app-level default merges its
   props into the trip image. Indexing stays closed while `NUXT_PUBLIC_SITE_INDEXABLE` is `"false"`.
+- Login: Supabase Auth generates and checks the OTP, SMS go out through the `send-sms` hook in
+  boleia-db (castbrick). `UiTurnstile` on `/entrar` yields a single-use token for every code request
+  (`sendCode(phone, captchaToken)`); it renders only when `NUXT_PUBLIC_TURNSTILE_SITE_KEY` is set.
 - nuxt-og-image: templates live in `app/components/OgImage/<Name>.satori.vue` (the renderer suffix is
   required), pages call `defineOgImage('<Name>', props)`; in satori stack blocks with fixed margins,
   `justify-between` over the full height clips the bottom.

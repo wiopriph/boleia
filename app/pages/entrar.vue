@@ -10,11 +10,27 @@ const route = useRoute();
 const { sendCode, verifyCode } = useAuth();
 const { load, update, profile } = useProfile();
 const { messageFor } = useBoleiaError();
+const hasCaptcha = Boolean(useRuntimeConfig().public.turnstileSiteKey);
 
 const step = ref<'phone' | 'code'>('phone');
 const isPending = ref(false);
 const formError = ref<string | null>(null);
 const localPhone = ref('');
+const captchaToken = ref('');
+const captcha = ref<{ reset: () => void } | null>(null);
+
+// one request spends one token: send it, then ask the widget for the next one (the resend needs it too)
+async function requestCode() {
+  if (hasCaptcha && !captchaToken.value) {
+    throw new BoleiaError('CAPTCHA_REQUIRED');
+  }
+
+  try {
+    await sendCode(localPhone.value, captchaToken.value || undefined);
+  } finally {
+    captcha.value?.reset();
+  }
+}
 
 const phoneSchema = z.object({
   phone: z.string().refine(value => normalizeLocalPhone(value) !== null, 'Indique um número angolano com 9 dígitos, por exemplo 923 456 789'),
@@ -57,7 +73,7 @@ async function onPhone(event: FormSubmitEvent<PhoneForm>) {
 
   try {
     localPhone.value = normalizeLocalPhone(event.data.phone)!;
-    await sendCode(localPhone.value);
+    await requestCode();
     step.value = 'code';
     startCooldown();
   } catch (error) {
@@ -75,7 +91,7 @@ async function resend() {
   formError.value = null;
 
   try {
-    await sendCode(localPhone.value);
+    await requestCode();
     startCooldown();
   } catch (error) {
     formError.value = messageFor(error);
@@ -253,5 +269,12 @@ function back() {
         </UButton>
       </div>
     </UForm>
+
+    <!-- one widget for both steps: the resend spends a token as well -->
+    <UiTurnstile
+      ref="captcha"
+      v-model="captchaToken"
+      class="mt-4"
+    />
   </UContainer>
 </template>

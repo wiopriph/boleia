@@ -18,5 +18,12 @@ The build bakes `SUPABASE_URL` and `SUPABASE_KEY` (anon key) from `.env`. Public
 `wrangler.jsonc` `vars`: `NUXT_PUBLIC_SITE_URL`, `NUXT_PUBLIC_SUPPORT_EMAIL` (shown on `/contactos`) and
 `NUXT_PUBLIC_SITE_INDEXABLE` (`"false"` keeps robots closed; remove it at launch). The only secret is
 `NUXT_APP_SECRET` (OG image URL signing): `openssl rand -base64 36 | npx wrangler secret put NUXT_APP_SECRET`.
+
+Login captcha: Cloudflare Turnstile protects "send the code" from SMS pumping. The site key goes to
+`NUXT_PUBLIC_TURNSTILE_SITE_KEY` (a `wrangler.jsonc` var, `.env` locally; empty = no widget), the
+secret key to Supabase (Authentication -> Attack Protection -> Turnstile). Put the site key live
+first and enable it in Supabase second. Once Supabase enforces it, every client has to send a token:
+the Flutter app, `scripts/edge-smoke.sh --cloud` and any OTP request made by hand. Add `localhost` to
+the widget hostnames for local development.
 Static texts (`content/`) are served by `@nuxt/content` from the D1 binding `DB`; wrangler created the
 database `boleia-content` on the first deploy and finds it by name afterwards.

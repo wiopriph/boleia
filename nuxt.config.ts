@@ -41,6 +41,8 @@ export default defineNuxtConfig({
     public: {
       // NUXT_PUBLIC_SUPPORT_EMAIL, shown on /contactos
       supportEmail: '',
+      // NUXT_PUBLIC_TURNSTILE_SITE_KEY: Cloudflare Turnstile on the login form; empty = no captcha
+      turnstileSiteKey: '',
       // declared so NUXT_PUBLIC_SITE_INDEXABLE=false can close indexing at runtime (Worker var)
       site: { indexable: true },
     },

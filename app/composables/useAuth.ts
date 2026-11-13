@@ -1,13 +1,25 @@
+function sendErrorCode(error: { status?: number, code?: string }): string {
+  if (error.code === 'captcha_failed') {
+    return 'CAPTCHA_FAILED';
+  }
+
+  return error.status === 429 ? 'RATE_LIMITED' : 'OTP_SEND_FAILED';
+}
+
 // Phone + OTP only. GoTrue takes the number without "+": 244900000005.
 export function useAuth() {
   const db = useDb();
   const user = useSupabaseUser();
 
-  async function sendCode(localPhone: string) {
-    const { error } = await db.auth.signInWithOtp({ phone: toAuthPhone(localPhone) });
+  // captchaToken: Turnstile token, checked by Supabase Auth when its captcha protection is on
+  async function sendCode(localPhone: string, captchaToken?: string) {
+    const { error } = await db.auth.signInWithOtp({
+      phone: toAuthPhone(localPhone),
+      options: { captchaToken },
+    });
 
     if (error) {
-      throw new BoleiaError(error.status === 429 ? 'RATE_LIMITED' : 'OTP_SEND_FAILED', error);
+      throw new BoleiaError(sendErrorCode(error), error);
     }
   }
 
