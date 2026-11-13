@@ -98,7 +98,6 @@ export function errorText(code: string | null | undefined): string {
 Object.assign(BOLEIA_ERRORS, {
   OTP_SEND_FAILED: 'Não foi possível enviar o código. Verifique o número e tente novamente.',
   OTP_INVALID: 'Código incorreto ou expirado. Peça um novo código.',
-  CAPTCHA_REQUIRED: 'Confirme que não é um robô e tente novamente.',
   CAPTCHA_FAILED: 'Não foi possível confirmar que não é um robô. Tente novamente.',
 });
 

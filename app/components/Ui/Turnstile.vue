@@ -70,6 +70,9 @@ if (siteKey) {
   });
 
   onBeforeUnmount(() => {
+    // the next step mounts its own widget: its token must not be mistaken for this one's
+    token.value = '';
+
     if (widgetId) {
       api()?.remove(widgetId);
       widgetId = null;

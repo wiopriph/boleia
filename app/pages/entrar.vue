@@ -19,10 +19,14 @@ const localPhone = ref('');
 const captchaToken = ref('');
 const captcha = ref<{ reset: () => void } | null>(null);
 
-// one request spends one token: send it, then ask the widget for the next one (the resend needs it too)
+const CAPTCHA_WAIT_MS = 4000;
+
+// One request spends one token: send it, then ask the widget for the next one (the resend needs it too).
+// Supabase Auth is what enforces the captcha. A widget that is slow or blocked gets a short wait and
+// the request goes out anyway, so it cannot lock people out while enforcement is off.
 async function requestCode() {
   if (hasCaptcha && !captchaToken.value) {
-    throw new BoleiaError('CAPTCHA_REQUIRED');
+    await until(captchaToken).toBeTruthy({ timeout: CAPTCHA_WAIT_MS });
   }
 
   try {
@@ -172,6 +176,11 @@ function back() {
         </UInput>
       </UFormField>
 
+      <UiTurnstile
+        ref="captcha"
+        v-model="captchaToken"
+      />
+
       <UAlert
         v-if="formError"
         color="error"
@@ -268,13 +277,11 @@ function back() {
           {{ resendIn > 0 ? `Reenviar em ${resendIn} s` : 'Reenviar código' }}
         </UButton>
       </div>
-    </UForm>
 
-    <!-- one widget for both steps: the resend spends a token as well -->
-    <UiTurnstile
-      ref="captcha"
-      v-model="captchaToken"
-      class="mt-4"
-    />
+      <UiTurnstile
+        ref="captcha"
+        v-model="captchaToken"
+      />
+    </UForm>
   </UContainer>
 </template>
