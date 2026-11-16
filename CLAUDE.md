@@ -8,6 +8,7 @@ RPC, Edge Functions); there is no API server, the client talks to Supabase direc
 
 - `../boleia-db/docs/api.md`: the contract (RPC, views, jsonb shapes, error codes, realtime, functions).
 - `../boleia-db/docs/spec.md`: the spec; sections 5, 7, 9, 11, 12 matter for the client.
+- `../boleia-db/docs/flows.md`: every branch of the product as diagrams (derived from the spec).
 - `types/database.ts` is a copy from boleia-db: `npm run sync-types`, never edit by hand.
 - `types/rpc.ts`: hand-written shapes of jsonb arguments and results (api.md "Формы jsonb").
 
