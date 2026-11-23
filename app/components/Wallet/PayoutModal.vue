@@ -64,7 +64,7 @@ async function confirm() {
   <UModal
     v-model:open="isOpen"
     title="Levantar dinheiro"
-    description="Os levantamentos são processados manualmente uma vez por semana."
+    description="Os levantamentos são processados manualmente uma vez por dia."
   >
     <template #body>
       <div
@@ -96,7 +96,7 @@ async function confirm() {
         </p>
 
         <p class="text-sm text-muted">
-          Um pedido de cada vez e no máximo um por semana.
+          Um pedido de cada vez e no máximo um a cada 24 horas.
         </p>
       </div>
 

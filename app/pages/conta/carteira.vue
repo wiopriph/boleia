@@ -54,7 +54,7 @@ const withdrawHint = computed(() => {
     return `Pode levantar a partir de ${formatKz(PAYOUT_MIN_KZ)}.`;
   }
 
-  return 'Processamos os levantamentos uma vez por semana.';
+  return 'Processamos os levantamentos uma vez por dia.';
 });
 
 const isPayoutOpen = ref(false);
