@@ -39,6 +39,7 @@ Each screen: short description (data, RPC, states) -> approval -> code -> check 
 the shared cloud project with the test users from api.md (OTP 123456) -> `npm run typecheck`,
 `npm run lint` -> commit to `master`. Commit messages in English, short, spec section in the body.
 Deploy target is Cloudflare Workers (`wrangler.jsonc`).
+Manual test cases and the 15-minute pre-deploy check: `docs/test-plan.md`.
 
 ## Gotchas
 
