@@ -57,7 +57,7 @@ O valor entra no seu saldo quando o passageiro confirma a chegada ou quando a vi
 
 ### Quanto cobra a Boleia?
 
-A taxa de serviço é paga pelo passageiro: 10 % do preço, com um mínimo de 1 000 Kz por reserva. O condutor recebe o preço que definiu por lugar.
+A taxa de serviço é paga pelo passageiro: 10 % do preço de cada lugar, com um mínimo de 1 000 Kz por lugar. O condutor recebe o preço que definiu por lugar.
 
 ### E se eu tiver de cancelar?
 

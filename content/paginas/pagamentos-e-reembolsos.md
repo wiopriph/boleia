@@ -9,9 +9,9 @@ O lugar paga-se no momento da reserva, com Multicaixa Express. Recebe o pedido d
 
 ## Quanto se paga
 
-O total é o preço dos lugares mais a taxa de serviço da Boleia: 10 % do preço, com um mínimo de 1 000 Kz por reserva. O total aparece sempre antes de pagar.
+O total é o preço dos lugares mais a taxa de serviço da Boleia: 10 % do preço de cada lugar, com um mínimo de 1 000 Kz por lugar. O total aparece sempre antes de pagar.
 
-Exemplos: uma reserva de 4 lugares a 7 000 Kz tem uma taxa de 2 800 Kz. Uma reserva de 2 lugares a 3 000 Kz tem a taxa mínima de 1 000 Kz.
+Exemplos: 2 lugares a 7 000 Kz custam 14 000 Kz mais 2 000 Kz de taxa (o mínimo de 1 000 Kz por cada lugar). 2 lugares a 12 000 Kz custam 24 000 Kz mais 2 400 Kz de taxa (10 % de cada lugar).
 
 ## Onde fica o dinheiro
 
