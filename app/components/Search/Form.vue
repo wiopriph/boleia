@@ -13,15 +13,30 @@ await ensureLoaded();
 
 const today = toLuandaDateString();
 
+const DEFAULT_ORIGIN_SLUG = 'luanda';
+
+// Most trips start in Luanda: an empty form opens with it, unless the page already sets a place.
+function originFor(initial: Partial<SearchParams>): string | undefined {
+  if (initial.from) {
+    return initial.from;
+  }
+
+  if (initial.to === DEFAULT_ORIGIN_SLUG) {
+    return undefined;
+  }
+
+  return cities.value.some(place => place.slug === DEFAULT_ORIGIN_SLUG) ? DEFAULT_ORIGIN_SLUG : undefined;
+}
+
 const state = reactive<{ from: string | undefined, to: string | undefined, date: string, seats: number }>({
-  from: props.initial.from,
+  from: originFor(props.initial),
   to: props.initial.to,
   date: props.initial.date ?? today,
   seats: props.initial.seats ?? 1,
 });
 
 watch(() => props.initial, (next) => {
-  state.from = next.from;
+  state.from = originFor(next);
   state.to = next.to;
   state.date = next.date ?? today;
   state.seats = next.seats ?? 1;
