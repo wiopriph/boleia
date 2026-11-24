@@ -8,6 +8,14 @@ const { fetchBooking } = useBooking();
 
 const { data: booking, refresh } = await useAsyncData(`booking:${bookingId}`, () => fetchBooking(bookingId));
 
+const userId = useUserId();
+
+// This page is the passenger's view. A driver gets here from a link built by booking id
+// (a notification sent to both sides): his screen for the same booking is the trip.
+if (booking.value && userId.value && booking.value.driver_id === userId.value && booking.value.passenger_id !== userId.value) {
+  await navigateTo(`/conta/viagens/${booking.value.trip_id}`, { replace: true });
+}
+
 const statusText = computed(() => (booking.value ? bookingStatusText(booking.value) : null));
 const isCancelOpen = ref(false);
 

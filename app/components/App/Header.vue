@@ -4,12 +4,20 @@ const { isAdmin } = useProfile();
 const { unreadCount, refreshUnread } = useNotifications();
 const route = useRoute();
 
-// pull, not realtime: the badge refreshes on sign-in and on every navigation
+// pull, not realtime: the badge refreshes on sign-in, on every navigation and when the tab is shown again
 watch([user, () => route.fullPath], () => {
   if (import.meta.client) {
     refreshUnread();
   }
 }, { immediate: true });
+
+const visibility = useDocumentVisibility();
+
+watch(visibility, (state) => {
+  if (state === 'visible') {
+    refreshUnread();
+  }
+});
 
 const menu = computed(() => [
   [

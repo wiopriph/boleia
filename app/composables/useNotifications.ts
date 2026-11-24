@@ -1,5 +1,8 @@
 import type { NotificationRow } from '~/utils/notifications';
 
+
+const UNREAD_BATCH = 500;
+
 // In-app feed: pull on open, no realtime (spec section 7 keeps it to three subscriptions).
 export function useNotifications() {
   const db = useDb();
@@ -47,5 +50,21 @@ export function useNotifications() {
     await refreshUnread();
   }
 
-  return { unreadCount, refreshUnread, fetchRecent, markRead };
+  // every unread row, not only the loaded page of the feed
+  async function markAllRead() {
+    if (!userId.value) {
+      return;
+    }
+
+    const { data } = await db.from('notifications')
+      .select('id')
+      .eq('user_id', userId.value)
+      .eq('channel', 'inapp')
+      .is('read_at', null)
+      .limit(UNREAD_BATCH);
+
+    await markRead((data ?? []).map(row => row.id));
+  }
+
+  return { unreadCount, refreshUnread, fetchRecent, markRead, markAllRead };
 }
