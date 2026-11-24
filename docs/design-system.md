@@ -78,6 +78,8 @@ padding comes from the `UCard` defaults (20px, 24px from `sm`).
 - Page header: `UiPageHeader` (title, description, action slot). A back link goes above it as a
   `UButton variant="link" color="neutral"` with `i-lucide-arrow-left`.
 - Empty and "nothing found" states: `UiEmptyState` with an icon, a title and at most one action.
+- Phone fields: `UiPhoneInput` (fixed `+244`, 9 digits grouped by three, a pasted country code is
+  dropped). Never a plain `UInput type="tel"`.
 - One solid primary button per screen. Others are `soft`, `outline` or `ghost`; destructive actions
   are `color="error"` and always confirmed in a modal.
 - Controls are 48px high (`size="lg"`/`xl` defaults in `app.config.ts`), so they are comfortable on

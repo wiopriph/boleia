@@ -160,20 +160,12 @@ function back() {
         name="phone"
         help="Enviamos um código por SMS para este número."
       >
-        <UInput
+        <UiPhoneInput
           v-model="phoneState.phone"
-          type="tel"
-          inputmode="numeric"
           autocomplete="tel-national"
-          placeholder="923 456 789"
           size="xl"
           class="w-full"
-          :ui="{ base: 'ps-16' }"
-        >
-          <template #leading>
-            <span class="text-base text-muted">+244</span>
-          </template>
-        </UInput>
+        />
       </UFormField>
 
       <UiTurnstile

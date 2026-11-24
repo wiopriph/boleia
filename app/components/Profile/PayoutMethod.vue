@@ -97,19 +97,11 @@ async function onSubmit(event: FormSubmitEvent<Form>) {
       name="phone"
       help="Normalmente é o mesmo número da sua conta."
     >
-      <UInput
+      <UiPhoneInput
         v-model="state.phone"
-        type="tel"
-        inputmode="numeric"
-        placeholder="923 456 789"
         size="lg"
         class="w-full"
-        :ui="{ base: 'ps-16' }"
-      >
-        <template #leading>
-          <span class="text-muted">+244</span>
-        </template>
-      </UInput>
+      />
     </UFormField>
 
     <template v-else>
