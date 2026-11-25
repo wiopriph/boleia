@@ -7,6 +7,8 @@ const props = defineProps<{ trip: DriverTrip }>();
 const statusText = computed(() => tripStatusText(props.trip));
 const badgeColor = computed(() => (statusText.value.tone === 'neutral' ? 'neutral' : statusText.value.tone));
 const seatsSold = computed(() => props.trip.seats_offered - props.trip.seats_available);
+// seats_available frees a seat when a booking closes: after the finish the counter no longer says who rode
+const hasSeatCount = computed(() => !props.trip.finished_at && props.trip.status !== 'completed');
 </script>
 
 <template>
@@ -35,7 +37,11 @@ const seatsSold = computed(() => props.trip.seats_offered - props.trip.seats_ava
     </div>
 
     <p class="mt-2 text-sm">
-      {{ seatsSold }} de {{ trip.seats_offered }} lugares reservados · {{ formatKz(trip.price_per_seat_kz) }} por lugar
+      <template v-if="hasSeatCount">
+        {{ seatsSold }} de {{ trip.seats_offered }} lugares reservados ·
+      </template>
+
+      {{ formatKz(trip.price_per_seat_kz) }} por lugar
     </p>
 
     <p class="mt-1 text-sm text-muted">

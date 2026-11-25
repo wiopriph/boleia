@@ -18,8 +18,11 @@ const contactError = ref<string | null>(null);
 const isRevealing = ref(false);
 
 const isActive = computed(() => props.booking.status === 'accepted' || props.booking.status === 'awaiting_confirm');
-// the PIN is accepted until the driver finishes the trip, also for a passenger left behind at the start
-const needsPin = computed(() => isActive.value && !props.booking.pin_entered_at && !props.booking.trip_finished_at);
+// the passenger gets the PIN 2 hours before departure (stage leaves 'accepted'); it is accepted until
+// the driver finishes the trip, also for a passenger left behind at the start
+const needsPin = computed(() => isActive.value && props.booking.stage !== 'accepted' &&
+  !props.booking.pin_entered_at && !props.booking.trip_finished_at);
+const isLeftBehind = computed(() => props.booking.stage === 'not_boarded');
 
 async function respond(shouldAccept: boolean) {
   isResponding.value = true;
@@ -128,6 +131,7 @@ async function reveal() {
       <UButton
         v-if="needsPin"
         icon="i-lucide-key-round"
+        :variant="isLeftBehind ? 'soft' : 'solid'"
         @click="emit('pin', booking)"
       >
         Introduzir PIN

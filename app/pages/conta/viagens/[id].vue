@@ -40,10 +40,24 @@ const needsIntent = computed(() => !!trip.value && isUpcoming.value && trip.valu
 
 const activeBookings = computed(() => bookings.value.filter(booking => ['requested', 'accepted', 'awaiting_confirm', 'disputed'].includes(booking.status)));
 const closedBookings = computed(() => bookings.value.filter(booking => !activeBookings.value.includes(booking)));
-const seatsSold = computed(() => (trip.value ? trip.value.seats_offered - trip.value.seats_available : 0));
-const expectedKz = computed(() => activeBookings.value
-  .filter(booking => booking.status !== 'requested')
-  .reduce((sum, booking) => sum + booking.price_total_kz, 0));
+// seats_available frees a seat when a booking closes, so after the start the seats come from the bookings
+const RODE: BookingRow['status'][] = ['accepted', 'awaiting_confirm', 'completed', 'no_show', 'disputed'];
+const seatsSold = computed(() => {
+  if (!trip.value) {
+    return 0;
+  }
+
+  return trip.value.started_at ?
+    bookings.value.filter(booking => RODE.includes(booking.status)).reduce((sum, booking) => sum + booking.seats, 0) :
+    trip.value.seats_offered - trip.value.seats_available;
+});
+
+function totalKz(statuses: BookingRow['status'][]) {
+  return bookings.value.filter(booking => statuses.includes(booking.status)).reduce((sum, booking) => sum + booking.price_total_kz, 0);
+}
+
+const expectedKz = computed(() => totalKz(['accepted', 'awaiting_confirm']));
+const disputedKz = computed(() => totalKz(['disputed']));
 
 const isConfirming = ref(false);
 
@@ -115,7 +129,7 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
         {{ formatDayLong(trip.departure_at) }}, {{ formatTime(trip.departure_at) }}
       </p>
 
-      <div class="mt-1 flex items-start justify-between gap-3">
+      <div class="mt-1 flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
         <h1 class="page-title">
           {{ trip.origin?.name }} <span class="text-muted">para</span> {{ trip.destination?.name }}
         </h1>
@@ -137,7 +151,7 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
           variant="soft"
           icon="i-lucide-ban"
           title="Viagem cancelada"
-          :description="trip.cancel_reason ?? undefined"
+          :description="tripCancelText(trip)"
         />
 
         <UCard v-if="needsIntent">
@@ -203,6 +217,16 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
               </dd>
             </div>
 
+            <div v-if="disputedKz > 0">
+              <dt class="text-muted">
+                Em disputa
+              </dt>
+
+              <dd class="font-medium tabular-nums">
+                {{ formatKz(disputedKz) }}
+              </dd>
+            </div>
+
             <div>
               <dt class="text-muted">
                 Reservas
@@ -260,14 +284,17 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
           </ul>
 
           <p
-            v-else
+            v-else-if="!closedBookings.length"
             class="text-sm text-muted"
           >
             {{ isUpcoming ? 'Ainda não há reservas pagas. Partilhe a viagem para a encher mais depressa.' : 'Esta viagem não teve reservas pagas.' }}
           </p>
 
           <template v-if="closedBookings.length">
-            <USeparator class="my-4" />
+            <USeparator
+              v-if="activeBookings.length"
+              class="my-4"
+            />
 
             <p class="text-sm font-medium text-muted">
               Fechadas

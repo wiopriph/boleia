@@ -17,12 +17,14 @@ const waitUntilMs = computed(() => departureMs.value + props.trip.wait_minutes *
 
 const passengers = computed(() => props.bookings.filter(booking => booking.status === 'accepted' || booking.status === 'awaiting_confirm'));
 const boarded = computed(() => passengers.value.filter(booking => booking.pin_entered_at));
+// after the finish bookings close one by one (rated, disputed), the PIN mark stays
+const hasRiders = computed(() => props.bookings.some(booking => booking.pin_entered_at));
 const missing = computed(() => passengers.value.filter(booking => !booking.pin_entered_at));
 
 const isStarted = computed(() => !!props.trip.started_at);
 const isFinished = computed(() => !!props.trip.finished_at);
-// boarding opens with the PIN window, 3 hours before departure
-const isBoardingOpen = computed(() => !isStarted.value && passengers.value.length > 0 && props.now >= departureMs.value - 3 * HOUR_MS);
+// boarding opens when passengers get their PIN, 2 hours before departure
+const isBoardingOpen = computed(() => !isStarted.value && passengers.value.length > 0 && props.now >= departureMs.value - 2 * HOUR_MS);
 const isWaitOver = computed(() => props.now >= waitUntilMs.value);
 // start_trip has the same rule: at once when everyone gave the PIN, otherwise after the wait
 const canStart = computed(() => isBoardingOpen.value && (missing.value.length === 0 || isWaitOver.value));
@@ -154,7 +156,7 @@ async function finish() {
           name="i-lucide-circle-check"
           class="mt-0.5 size-5 shrink-0 text-success"
         />
-        {{ boarded.length ? `Viagem concluída às ${formatTime(trip.finished_at!)}` : 'Viagem fechada: ninguém embarcou' }}
+        {{ hasRiders ? `Viagem concluída às ${formatTime(trip.finished_at!)}` : 'Viagem fechada: ninguém embarcou' }}
       </p>
 
       <p class="mt-1 text-sm text-muted">

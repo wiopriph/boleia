@@ -13,6 +13,13 @@ const isRevealing = ref(false);
 const contactError = ref<string | null>(null);
 
 const pinAvailableAt = computed(() => new Date(new Date(props.booking.departure_at).getTime() - 2 * 60 * 60 * 1000));
+const now = ref(Date.now());
+
+useIntervalFn(() => {
+  now.value = Date.now();
+}, 30_000);
+
+const isWaitOver = computed(() => !!props.booking.wait_until && now.value >= new Date(props.booking.wait_until).getTime());
 
 // reveal_contact logs every view, so the phone is fetched only when asked for
 async function reveal() {
@@ -72,7 +79,12 @@ async function reveal() {
         class="mt-0.5 size-4 shrink-0 text-muted"
       />
 
-      <span>
+      <span v-if="isWaitOver">
+        O tempo de espera terminou às {{ formatTime(booking.wait_until!) }}. O condutor pode partir sem si a qualquer momento:
+        se ainda vai a caminho, ligue-lhe já.
+      </span>
+
+      <span v-else>
         Esteja no ponto de encontro à hora marcada. O condutor espera até {{ booking.wait_minutes }} min<template v-if="booking.wait_until">, até às {{ formatTime(booking.wait_until) }}</template>.
         Depois pode partir sem si, e a reserva fica sem reembolso.
       </span>

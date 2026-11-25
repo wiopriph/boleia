@@ -42,13 +42,9 @@ export function bookingStatusText(booking: BookingRow): StatusText {
     case 'accepted':
       return { label: 'Lugar confirmado', detail: `${paid} retidos até ao fim da viagem`, tone: 'success' };
     case 'boarding':
-      return {
-        label: 'Hora de embarcar',
-        detail: 'Diga o seu PIN ao condutor quando entrar no carro.',
-        tone: 'primary',
-      };
+      return { label: 'Hora de embarcar', detail: `${paid} retidos até ao fim da viagem`, tone: 'primary' };
     case 'on_board':
-      return { label: 'A bordo', detail: 'PIN registado. A viagem começa quando o condutor a iniciar.', tone: 'success' };
+      return { label: 'A bordo', detail: `${paid} retidos até ao fim da viagem`, tone: 'success' };
     case 'in_trip':
       return { label: 'Em viagem', detail: `${paid} retidos até ao fim da viagem`, tone: 'primary' };
     case 'finished':

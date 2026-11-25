@@ -31,6 +31,13 @@ export function tripStatusText(trip: TripProgress) {
     TRIP_STATUS.departed;
 }
 
+// The driver's own reason is free text; a trip closed by the system carries a code instead.
+export function tripCancelText(trip: Pick<Tables<'trips'>, 'cancel_reason'>): string | undefined {
+  return trip.cancel_reason === 'trip_not_started' ?
+    'Não iniciou a viagem na aplicação nas 24 horas depois da hora de partida. Os passageiros foram reembolsados na totalidade.' :
+    trip.cancel_reason ?? undefined;
+}
+
 export function isUpcomingTrip(trip: Pick<Tables<'trips'>, 'status'>): boolean {
   return trip.status === 'published' || trip.status === 'full' || trip.status === 'departed';
 }
