@@ -1,4 +1,4 @@
-import type { Enums, RefundRule, SystemCancelReason, Views } from '~~/types/rpc';
+import type { BookingStage, Enums, RefundRule, SystemCancelReason, Views } from '~~/types/rpc';
 
 
 export type BookingRow = Views<'my_bookings'>;
@@ -19,27 +19,50 @@ export function cancelReasonText(reason: string | null | undefined): string | nu
     no_response: 'O condutor não respondeu a tempo. O valor é devolvido na totalidade.',
     dispute_refund: 'A moderação decidiu devolver o valor.',
     driver_no_show: 'O condutor não apareceu. O valor é devolvido na totalidade.',
+    trip_not_started: 'A viagem não se realizou. O valor é devolvido na totalidade.',
     moderation: 'A viagem foi retirada pela Boleia. O valor é devolvido na totalidade.',
   };
 
   return reason && reason in texts ? texts[reason as SystemCancelReason] : null;
 }
 
-// Passenger wording for a booking; money comes from the view, nothing is computed here.
+// Passenger wording for a booking. The step comes from my_bookings.stage and the money from the view:
+// nothing is computed here.
 export function bookingStatusText(booking: BookingRow): StatusText {
   const paid = formatKz(booking.paid_total_kz);
   const refund = formatKz(booking.refund_kz);
-  const status = booking.status as Enums<'booking_status'>;
 
-  switch (status) {
-    case 'pending_payment':
-      return { label: 'Aguarda pagamento', detail: `${paid} a pagar`, tone: 'warning' };
-    case 'payment_failed':
-      return { label: 'Pagamento não concluído', detail: cancelReasonText(booking.cancel_reason) ?? 'Pode tentar pagar de novo.', tone: 'error' };
+  switch (booking.stage as BookingStage) {
+    case 'payment':
+      return booking.status === 'pending_payment' ?
+        { label: 'Aguarda pagamento', detail: `${paid} a pagar`, tone: 'warning' } :
+        { label: 'Pagamento não concluído', detail: cancelReasonText(booking.cancel_reason) ?? 'Pode tentar pagar de novo.', tone: 'error' };
     case 'requested':
       return { label: 'À espera do condutor', detail: `${paid} retidos até à resposta`, tone: 'primary' };
     case 'accepted':
       return { label: 'Lugar confirmado', detail: `${paid} retidos até ao fim da viagem`, tone: 'success' };
+    case 'boarding':
+      return {
+        label: 'Hora de embarcar',
+        detail: 'Diga o seu PIN ao condutor quando entrar no carro.',
+        tone: 'primary',
+      };
+    case 'on_board':
+      return { label: 'A bordo', detail: 'PIN registado. A viagem começa quando o condutor a iniciar.', tone: 'success' };
+    case 'in_trip':
+      return { label: 'Em viagem', detail: `${paid} retidos até ao fim da viagem`, tone: 'primary' };
+    case 'finished':
+      return {
+        label: 'Viagem concluída pelo condutor',
+        detail: `${paid} retidos até à sua resposta`,
+        tone: 'warning',
+      };
+    case 'not_boarded':
+      return {
+        label: 'A viagem começou sem si',
+        detail: `${paid} retidos até ao fim do prazo para contestar`,
+        tone: 'error',
+      };
     case 'declined':
       return { label: 'Recusada pelo condutor', detail: `Reembolso de ${refund}`, tone: 'neutral' };
     case 'expired':
@@ -47,19 +70,18 @@ export function bookingStatusText(booking: BookingRow): StatusText {
     case 'cancelled':
       return {
         label: booking.cancelled_by === 'passenger' ? 'Cancelada por si' : 'Cancelada',
-        detail: booking.refund_kz > 0 ? `Reembolso de ${refund}` : 'Sem reembolso',
+        detail: [cancelReasonText(booking.cancel_reason), booking.refund_kz > 0 ? `Reembolso de ${refund}.` : 'Sem reembolso.']
+          .filter(Boolean).join(' '),
         tone: 'neutral',
       };
-    case 'awaiting_confirm':
-      return { label: 'Viagem em curso', detail: `${paid} retidos até confirmar a chegada`, tone: 'primary' };
     case 'completed':
       return { label: 'Concluída', detail: 'Pagamento entregue ao condutor', tone: 'success' };
     case 'no_show':
-      return { label: 'Não compareceu', detail: 'Sem reembolso', tone: 'error' };
+      return { label: 'Não embarcou', detail: 'Reserva fechada sem reembolso', tone: 'error' };
     case 'disputed':
       return { label: 'Em análise pela moderação', detail: `${paid} retidos até à decisão`, tone: 'warning' };
     default:
-      return { label: status, detail: '', tone: 'neutral' };
+      return { label: booking.status, detail: '', tone: 'neutral' };
   }
 }
 

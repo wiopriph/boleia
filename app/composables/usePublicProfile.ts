@@ -62,8 +62,13 @@ export function usePublicProfile() {
     return data ?? [];
   }
 
-  async function reportUser(targetId: string, reason: Enums<'report_reason'>, details?: string) {
-    return rpc('report_user', { target_id: targetId, reason, details });
+  // a report made from a booking carries the trip and the booking for the moderator
+  async function reportUser(
+    targetId: string, reason: Enums<'report_reason'>, details?: string, context?: { tripId?: string, bookingId?: string },
+  ) {
+    return rpc('report_user', {
+      target_id: targetId, reason, details, trip_id: context?.tripId, booking_id: context?.bookingId,
+    });
   }
 
   return { fetchProfile, fetchReviews, fetchUpcomingTrips, reportUser, reviewsPageSize: REVIEWS_PAGE };

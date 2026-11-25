@@ -1,5 +1,5 @@
 import type {
-  DriverArrivedResult, EnterPinResult, PriceHint, PublishTripPayload, PublishTripResult, Tables, UpdateTripPayload,
+  EnterPinResult, FinishTripResult, PriceHint, PublishTripPayload, PublishTripResult, StartTripResult, Tables, UpdateTripPayload,
 } from '~~/types/rpc';
 import type { BookingRow } from '~/utils/booking-status';
 
@@ -73,8 +73,12 @@ export function useDriverTrips() {
     await rpc('confirm_trip_intent', { trip_id: tripId });
   }
 
-  async function markArrived(tripId: string) {
-    return rpc<DriverArrivedResult>('driver_arrived', { trip_id: tripId });
+  async function startTrip(tripId: string) {
+    return rpc<StartTripResult>('start_trip', { trip_id: tripId });
+  }
+
+  async function finishTrip(tripId: string) {
+    return rpc<FinishTripResult>('finish_trip', { trip_id: tripId });
   }
 
   async function createReturnTrip(tripId: string, departureAt: string) {
@@ -89,12 +93,8 @@ export function useDriverTrips() {
     return rpc<EnterPinResult>('enter_pin', { booking_id: bookingId, pin });
   }
 
-  async function markNoShow(bookingId: string) {
-    await rpc('mark_no_show', { booking_id: bookingId });
-  }
-
   return {
     fetchMyTrips, fetchMyTrip, fetchTripBookings, fetchPriceHint, publishTrip, updateTrip, cancelTrip,
-    confirmIntent, markArrived, createReturnTrip, respondBooking, enterPin, markNoShow,
+    confirmIntent, startTrip, finishTrip, createReturnTrip, respondBooking, enterPin,
   };
 }

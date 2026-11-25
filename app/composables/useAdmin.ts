@@ -18,7 +18,7 @@ export type AdminReport = Tables<'reports'> & {
 };
 export type AdminPayout = Tables<'payouts'> & { user: AdminProfile | null };
 export type AdminDispute = BookingRow & { passenger: AdminProfile | null, driver: AdminProfile | null };
-export type AdminTrip = Pick<Tables<'trips'>, 'id' | 'status' | 'departure_at' | 'price_per_seat_kz' | 'seats_offered' | 'seats_available'> & {
+export type AdminTrip = Pick<Tables<'trips'>, 'id' | 'status' | 'departure_at' | 'started_at' | 'finished_at' | 'price_per_seat_kz' | 'seats_offered' | 'seats_available'> & {
   origin: { name: string } | null
   destination: { name: string } | null
 };
@@ -46,7 +46,7 @@ export interface AdminUserDetail {
 const PROFILE_COLUMNS = 'id, display_name, phone, avatar_url, status, suspended_until, driver_status, rating_avg, rating_count, trips_driven, trips_ridden, cancels_total, no_shows';
 // only the columns granted to authenticated (boleia-db RLS); provider and refund references stay hidden
 const PAYMENT_COLUMNS = 'id, booking_id, amount_kz, status, refund_kz, paid_at, refunded_at, created_at';
-const TRIP_COLUMNS = 'id, status, departure_at, price_per_seat_kz, seats_offered, seats_available, origin:places!trips_origin_place_id_fkey(name), destination:places!trips_destination_place_id_fkey(name)';
+const TRIP_COLUMNS = 'id, status, departure_at, started_at, finished_at, price_per_seat_kz, seats_offered, seats_available, origin:places!trips_origin_place_id_fkey(name), destination:places!trips_destination_place_id_fkey(name)';
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const HISTORY_LIMIT = 30;
 const CHAT_LIMIT = 200;

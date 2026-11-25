@@ -37,6 +37,13 @@ function seats(payload: Payload): string | null {
   return typeof payload.seats === 'number' && payload.seats > 0 ? seatsLabel(payload.seats) : null;
 }
 
+// "qua, 25 nov, 08:00": until when the passenger can rate or dispute
+function deadline(payload: Payload): string | null {
+  const value = text(payload, 'respond_until');
+
+  return value && !Number.isNaN(Date.parse(value)) ? formatDateTime(value) : null;
+}
+
 function refundLine(payload: Payload): string | null {
   const amount = money(payload, 'refund_kz');
 
@@ -45,6 +52,7 @@ function refundLine(payload: Payload): string | null {
 
 const DISPUTE_OUTCOMES: Record<string, string> = {
   completed: 'A viagem foi dada como feita.',
+  no_show: 'Ficou registado que o passageiro não embarcou.',
   refund_full: 'O valor é devolvido ao passageiro.',
   refund_partial: 'Parte do valor é devolvida ao passageiro.',
 };
@@ -107,7 +115,7 @@ const TEXTS: Record<string, (payload: Payload) => NotificationText> = {
     icon: 'i-lucide-circle-x',
   }),
   booking_no_show: () => ({
-    title: 'O condutor indicou que não compareceu.',
+    title: 'Não embarcou.',
     body: 'Reserva fechada sem reembolso.',
     icon: 'i-lucide-user-x',
   }),
@@ -175,19 +183,32 @@ const TEXTS: Record<string, (payload: Payload) => NotificationText> = {
     body: 'Pode cancelar com reembolso total.',
     icon: 'i-lucide-triangle-alert',
   }),
-  driver_arrived: (payload) => {
-    const until = clock(payload, 'wait_until');
-
-    return {
-      title: 'O condutor chegou.',
-      body: until ? `Espera até às ${until}.` : 'Está no ponto de encontro.',
-      icon: 'i-lucide-map-pin-check',
-    };
-  },
-  trip_completed_ask: () => ({ title: 'Chegou bem?', body: 'Confirme a viagem.', icon: 'i-lucide-thumbs-up' }),
-  dispute_opened: () => ({
-    title: 'Foi aberta uma disputa nesta viagem.',
-    body: 'A moderação vai analisar.',
+  // the two entries below are no longer sent (boleia-db 0025); old rows in the feed still need a text
+  driver_arrived: () => ({ title: 'O condutor chegou.', icon: 'i-lucide-map-pin-check' }),
+  trip_completed_ask: () => ({ title: 'A viagem terminou.', icon: 'i-lucide-thumbs-up' }),
+  trip_started_without_you: payload => ({
+    title: 'A viagem começou sem si.',
+    body: deadline(payload) ? `Se estava no local, conteste até ${deadline(payload)}.` : 'Se estava no local, conteste em 24 horas.',
+    icon: 'i-lucide-user-x',
+  }),
+  trip_finished: payload => ({
+    title: payload.by_system === true ? 'A viagem foi dada como concluída.' : 'Viagem concluída.',
+    body: deadline(payload) ? `Avalie ou conteste até ${deadline(payload)}.` : 'Avalie ou conteste em 24 horas.',
+    icon: 'i-lucide-flag',
+  }),
+  trip_start_reminder: () => ({
+    title: 'Já partiu?',
+    body: 'Inicie a viagem para registar quem embarcou.',
+    icon: 'i-lucide-play',
+  }),
+  trip_auto_closed: payload => ({
+    title: 'Fechámos a viagem por si.',
+    body: payload.step === 'finish' ? 'Não concluiu a viagem na aplicação.' : 'Não iniciou a viagem na aplicação.',
+    icon: 'i-lucide-timer-off',
+  }),
+  dispute_opened: payload => ({
+    title: 'O passageiro contestou a viagem.',
+    body: [disputeReasonLabel(text(payload, 'reason')), 'A moderação vai analisar.'].filter(Boolean).join('. '),
     icon: 'i-lucide-scale',
   }),
   dispute_resolved: payload => ({
@@ -251,7 +272,15 @@ const ADMIN_ROUTES: Record<string, string> = {
   reconciliation_alert: '/admin/dinheiro',
 };
 
-const DRIVER_TYPES = new Set(['booking_requested', 'booking_confirmed', 'booking_cancelled_by_passenger', 'trip_reminder_6h', 'trip_reminder_2h']);
+const DRIVER_TYPES = new Set([
+  'booking_requested',
+  'booking_confirmed',
+  'booking_cancelled_by_passenger',
+  'trip_reminder_6h',
+  'trip_reminder_2h',
+  'trip_start_reminder',
+  'trip_auto_closed',
+]);
 const WALLET_TYPES = new Set(['payout_released', 'payout_paid', 'payout_failed']);
 const VERIFICATION_TYPES = new Set(['verification_approved', 'verification_rejected']);
 

@@ -27,6 +27,11 @@ const OUTCOMES: Record<DisputeOutcome, { title: string, description: string, con
     description: 'A reserva fica concluída: uma parte volta para o passageiro e o resto segue para o condutor.',
     confirmLabel: 'Devolver uma parte',
   },
+  no_show: {
+    title: 'O passageiro não embarcou',
+    description: 'A reserva fecha sem reembolso: o valor segue para o condutor e o passageiro fica com uma falta registada.',
+    confirmLabel: 'Fechar como não embarcou',
+  },
 };
 
 const current = ref<AdminDispute | null>(null);
@@ -56,7 +61,7 @@ async function onDone() {
     </h1>
 
     <p class="mt-1 text-sm text-muted">
-      Reservas em que o passageiro marcou "Não viajei".
+      Reservas contestadas pelo passageiro: depois de o condutor concluir a viagem ou depois de a viagem começar sem ele.
     </p>
 
     <UAlert
@@ -119,6 +124,19 @@ async function onDone() {
             />
           </div>
 
+          <div class="mt-4 rounded-control bg-muted p-3 text-sm">
+            <p class="font-medium">
+              {{ disputeReasonLabel(item.dispute_reason) ?? 'Motivo não indicado' }}
+            </p>
+
+            <p
+              v-if="item.dispute_details"
+              class="mt-1 whitespace-pre-wrap"
+            >
+              {{ item.dispute_details }}
+            </p>
+          </div>
+
           <ul class="mt-4 space-y-1 text-sm">
             <li>
               <span class="text-muted">PIN:</span>
@@ -126,8 +144,13 @@ async function onDone() {
             </li>
 
             <li>
-              <span class="text-muted">Chegada do condutor:</span>
-              {{ item.driver_arrived_at ? `marcada em ${formatDateTime(item.driver_arrived_at)}` : 'não foi marcada' }}
+              <span class="text-muted">Início da viagem:</span>
+              {{ item.trip_started_at ? formatDateTime(item.trip_started_at) : 'não foi iniciada' }}
+            </li>
+
+            <li>
+              <span class="text-muted">Fim da viagem:</span>
+              {{ item.trip_finished_at ? formatDateTime(item.trip_finished_at) : 'não foi concluída' }}
             </li>
 
             <li v-if="item.wait_until">
@@ -150,11 +173,21 @@ async function onDone() {
 
           <div class="mt-4 flex flex-wrap gap-2">
             <UButton
+              v-if="item.pin_entered_at"
               color="neutral"
               variant="outline"
               @click="open(item, 'completed')"
             >
               A viagem aconteceu
+            </UButton>
+
+            <UButton
+              v-else
+              color="neutral"
+              variant="outline"
+              @click="open(item, 'no_show')"
+            >
+              Não embarcou
             </UButton>
 
             <UButton

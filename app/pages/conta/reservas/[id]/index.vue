@@ -36,8 +36,13 @@ const vehicleLine = computed(() => {
 });
 
 const canPay = computed(() => booking.value?.status === 'pending_payment' || booking.value?.status === 'payment_failed');
-const canCancel = computed(() => booking.value?.status === 'requested' || booking.value?.status === 'accepted');
-const isTripDayVisible = computed(() => booking.value?.status === 'accepted' || booking.value?.status === 'awaiting_confirm');
+const stage = computed(() => booking.value?.stage ?? null);
+// a booking with an entered PIN cannot be cancelled: the passenger is already in the car
+const canCancel = computed(() => stage.value === 'requested' || (booking.value?.status === 'accepted' && !booking.value.pin_entered_at));
+const isBoardingVisible = computed(() => stage.value === 'accepted' || stage.value === 'boarding');
+const isOnTheWay = computed(() => stage.value === 'on_board' || stage.value === 'in_trip');
+const needsResponse = computed(() => stage.value === 'finished' || stage.value === 'not_boarded');
+const disputeReason = computed(() => (stage.value === 'disputed' ? disputeReasonLabel(booking.value?.dispute_reason) : null));
 const canReview = computed(() => booking.value?.status === 'completed' || booking.value?.status === 'no_show');
 
 useRealtimeBookings((change) => {
@@ -104,6 +109,18 @@ useRealtimeBookings((change) => {
               <p class="text-sm text-muted">
                 {{ statusText.detail }}
               </p>
+
+              <p
+                v-if="disputeReason"
+                class="mt-2 text-sm"
+              >
+                <span class="text-muted">Motivo:</span> {{ disputeReason }}
+
+                <span
+                  v-if="booking.dispute_details"
+                  class="mt-1 block whitespace-pre-wrap text-muted"
+                >{{ booking.dispute_details }}</span>
+              </p>
             </div>
           </div>
 
@@ -130,14 +147,19 @@ useRealtimeBookings((change) => {
           </UButton>
         </UCard>
 
-        <BookingConfirmArrival
-          v-if="booking.status === 'awaiting_confirm'"
+        <BookingRespond
+          v-if="needsResponse"
           :booking="booking"
           @changed="refresh"
         />
 
+        <BookingTripProgress
+          v-if="isOnTheWay"
+          :booking="booking"
+        />
+
         <BookingTripDay
-          v-if="isTripDayVisible"
+          v-if="isBoardingVisible"
           :booking="booking"
         />
 

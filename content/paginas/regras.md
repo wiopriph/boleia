@@ -22,11 +22,12 @@ A Boleia junta condutores que já vão fazer uma viagem entre cidades com passag
 
 - Duas horas antes da partida recebe o PIN da viagem e passa a poder ver o contacto da outra pessoa.
 - O passageiro tem de estar no ponto de encontro à hora da partida.
-- O condutor espera o tempo indicado na viagem (30, 45 ou 60 minutos) e pode avisar que já chegou com o botão "Cheguei".
+- O condutor espera o tempo indicado na viagem (30, 45 ou 60 minutos).
 - Ao entrar no carro, o passageiro diz o PIN ao condutor. Dê o PIN apenas quando estiver no carro: é a prova de que viajou.
-- Passado o tempo de espera, o condutor pode marcar "Não apareceu" a quem faltou. Quem falta perde o valor pago.
-- No fim, o passageiro confirma que chegou bem. Se não confirmar, a viagem fecha sozinha: 48 horas depois da partida quando o PIN foi introduzido, 7 dias quando não foi.
-- Se pagou e não viajou, marque "Não viajei" na reserva. A equipa da Boleia analisa o caso com base no PIN e nas mensagens.
+- O condutor introduz o PIN de cada passageiro e inicia a viagem. Com o PIN de todos pode iniciar logo; se faltar alguém, só depois do tempo de espera.
+- Quem não deu o PIN quando a viagem começa recebe o aviso "A viagem começou sem si" e tem 24 horas para contestar. Sem contestação, perde o valor pago.
+- Ao chegar ao destino, o condutor conclui a viagem. O passageiro tem 24 horas para a avaliar ou contestar; sem resposta, a viagem fica confirmada e o condutor recebe o pagamento.
+- Durante a viagem pode reportar um problema na página da reserva. Depois de a viagem ser concluída pode contestá-la: a equipa da Boleia analisa o caso com base no PIN e nas mensagens.
 
 ## Regras para condutores
 

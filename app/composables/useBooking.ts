@@ -1,4 +1,4 @@
-import type { BookingPaymentResult, CancelQuote, CancelResult, RevealContactResult } from '~~/types/rpc';
+import type { BookingPaymentResult, CancelQuote, CancelResult, DisputeReason, RevealContactResult } from '~~/types/rpc';
 import type { BookingRow } from '~/utils/booking-status';
 
 
@@ -49,8 +49,13 @@ export function useBooking() {
     return rpc<CancelResult>('cancel_booking', { booking_id: bookingId, reason });
   }
 
-  async function confirmTrip(bookingId: string, didHappen: boolean) {
-    await rpc('confirm_trip', { booking_id: bookingId, happened: didHappen });
+  // the passenger approves a trip the driver has finished; a dispute goes through openDispute
+  async function confirmTrip(bookingId: string) {
+    await rpc('confirm_trip', { booking_id: bookingId, happened: true });
+  }
+
+  async function openDispute(bookingId: string, reason: DisputeReason, details: string) {
+    await rpc('open_dispute', { booking_id: bookingId, reason, details });
   }
 
   async function revealContact(bookingId: string) {
@@ -58,6 +63,6 @@ export function useBooking() {
   }
 
   return {
-    requestBooking, retryPayment, fetchBooking, fetchMyBookings, cancelQuote, cancelBooking, confirmTrip, revealContact,
+    requestBooking, retryPayment, fetchBooking, fetchMyBookings, cancelQuote, cancelBooking, confirmTrip, openDispute, revealContact,
   };
 }

@@ -4,7 +4,7 @@ import type { DriverTrip } from '~/composables/useDriverTrips';
 
 const props = defineProps<{ trip: DriverTrip }>();
 
-const statusText = computed(() => tripStatusText(props.trip.status));
+const statusText = computed(() => tripStatusText(props.trip));
 const badgeColor = computed(() => (statusText.value.tone === 'neutral' ? 'neutral' : statusText.value.tone));
 const seatsSold = computed(() => props.trip.seats_offered - props.trip.seats_available);
 </script>

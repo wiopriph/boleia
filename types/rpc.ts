@@ -109,11 +109,26 @@ export interface PriceHint {
   minutes: number | null
 }
 
-export interface DriverArrivedResult {
-  driver_arrived_at: string
-  wait_until: string
+export interface StartTripResult {
+  started_at: string
+  on_board?: number
+  not_boarded?: number
   already?: boolean
 }
+
+export interface FinishTripResult {
+  finished_at: string
+  asked?: number
+  already?: boolean
+}
+
+// my_bookings.stage: the step of a booking as the database sees it (boleia-db 0025)
+export type BookingStage
+  = 'payment' | 'requested' | 'accepted' | 'boarding' | 'on_board' | 'in_trip' | 'finished' | 'not_boarded'
+    | 'disputed' | 'completed' | 'no_show' | 'cancelled' | 'declined' | 'expired';
+
+// open_dispute reasons: the first four after a finished trip, the last three after "the trip left without you"
+export type DisputeReason = 'not_arrived' | 'left_midway' | 'unsafe' | 'other' | 'was_there' | 'driver_left_early';
 
 // Edge functions
 export type PaymentInstructions
@@ -139,7 +154,7 @@ export interface PaymentsStatusResult {
 // bookings.cancel_reason values set by the system (anything else is free text from a party)
 export type SystemCancelReason
   = 'PAYMENT_PHONE_MISMATCH' | 'payment_expired' | 'trip_departed' | 'trip_cancelled'
-    | 'no_response' | 'dispute_refund' | 'driver_no_show' | 'moderation';
+    | 'no_response' | 'dispute_refund' | 'driver_no_show' | 'trip_not_started' | 'moderation';
 
 // Admin (spec section 11)
 export interface AdminUser {
@@ -182,7 +197,8 @@ export interface AdminStats {
 }
 
 export type ModerationAction = 'warn' | 'restrict' | 'suspend' | 'ban' | 'unban';
-export type DisputeOutcome = 'completed' | 'refund_full' | 'refund_partial';
+// no_show is valid only for a booking without a PIN (the trip started without the passenger)
+export type DisputeOutcome = 'completed' | 'refund_full' | 'refund_partial' | 'no_show';
 
 export interface AdminCancelTripResult {
   cancelled_bookings: number

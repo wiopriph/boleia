@@ -29,6 +29,6 @@ description: Como a Boleia protege o seu dinheiro e a sua viagem, e o que pode f
 ## Se algo correr mal
 
 - Em caso de perigo, ligue primeiro para a polícia (113).
-- Se pagou e não viajou, marque "Não viajei" na reserva. O dinheiro fica retido até a equipa analisar o caso.
+- Durante a viagem, use "Reportar um problema" na página da reserva. Depois de a viagem ser concluída, pode contestá-la: o dinheiro fica retido até a equipa analisar o caso.
 - Para comportamentos impróprios, use o botão de denúncia no perfil da pessoa.
 - Para tudo o resto, veja os [Contactos](/contactos).

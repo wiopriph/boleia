@@ -254,7 +254,7 @@ function vehicleLine(vehicle: NonNullable<typeof detail.value>['vehicles'][numbe
             </p>
 
             <p class="text-muted">
-              {{ formatDateTime(trip.departure_at) }} · {{ tripStatusText(trip.status).label.toLowerCase() }}
+              {{ formatDateTime(trip.departure_at) }} · {{ tripStatusText(trip).label.toLowerCase() }}
               · {{ formatKz(trip.price_per_seat_kz) }} por lugar
               · {{ trip.seats_available }} de {{ trip.seats_offered }} lugares livres
             </p>

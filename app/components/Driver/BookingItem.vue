@@ -3,24 +3,23 @@ import type { RevealContactResult } from '~~/types/rpc';
 import type { BookingRow } from '~/utils/booking-status';
 
 
-const props = defineProps<{ booking: BookingRow, canMarkNoShow: boolean }>();
+const props = defineProps<{ booking: BookingRow }>();
 const emit = defineEmits<{ changed: [], pin: [booking: BookingRow], cancel: [booking: BookingRow] }>();
 
-const { respondBooking, markNoShow } = useDriverTrips();
+const { respondBooking } = useDriverTrips();
 const { revealContact } = useBooking();
 const { toastError, messageFor } = useBoleiaError();
 const toast = useToast();
 
 const statusText = computed(() => driverBookingStatusText(props.booking));
 const isResponding = ref(false);
-const isNoShowOpen = ref(false);
-const isMarkingNoShow = ref(false);
 const contact = ref<RevealContactResult | null>(null);
 const contactError = ref<string | null>(null);
 const isRevealing = ref(false);
 
 const isActive = computed(() => props.booking.status === 'accepted' || props.booking.status === 'awaiting_confirm');
-const needsPin = computed(() => isActive.value && !props.booking.pin_entered_at);
+// the PIN is accepted until the driver finishes the trip, also for a passenger left behind at the start
+const needsPin = computed(() => isActive.value && !props.booking.pin_entered_at && !props.booking.trip_finished_at);
 
 async function respond(shouldAccept: boolean) {
   isResponding.value = true;
@@ -40,21 +39,6 @@ async function respond(shouldAccept: boolean) {
     await toastError(error);
   } finally {
     isResponding.value = false;
-  }
-}
-
-async function confirmNoShow() {
-  isMarkingNoShow.value = true;
-
-  try {
-    await markNoShow(props.booking.id);
-    isNoShowOpen.value = false;
-    toast.add({ title: 'Falta registada', color: 'success', icon: 'i-lucide-check' });
-    emit('changed');
-  } catch (error) {
-    await toastError(error);
-  } finally {
-    isMarkingNoShow.value = false;
   }
 }
 
@@ -150,16 +134,6 @@ async function reveal() {
       </UButton>
 
       <UButton
-        v-if="needsPin && canMarkNoShow"
-        variant="soft"
-        color="neutral"
-        icon="i-lucide-user-x"
-        @click="isNoShowOpen = true"
-      >
-        Não apareceu
-      </UButton>
-
-      <UButton
         v-if="!contact"
         variant="soft"
         color="neutral"
@@ -212,7 +186,7 @@ async function reveal() {
       </UButton>
 
       <UButton
-        v-if="booking.status === 'accepted'"
+        v-if="booking.status === 'accepted' && !booking.pin_entered_at"
         variant="ghost"
         color="error"
         size="sm"
@@ -222,29 +196,5 @@ async function reveal() {
         Cancelar esta reserva
       </UButton>
     </div>
-
-    <UModal
-      v-model:open="isNoShowOpen"
-      :title="`${booking.passenger_name} não apareceu?`"
-      description="Só fica registado como falta se outro passageiro desta viagem já tiver dado o PIN. Sem isso, o caso segue para a moderação."
-    >
-      <template #footer>
-        <UButton
-          variant="ghost"
-          color="neutral"
-          @click="isNoShowOpen = false"
-        >
-          Voltar
-        </UButton>
-
-        <UButton
-          color="error"
-          :loading="isMarkingNoShow"
-          @click="confirmNoShow"
-        >
-          Marcar falta
-        </UButton>
-      </template>
-    </UModal>
   </li>
 </template>

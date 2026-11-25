@@ -68,17 +68,13 @@ async function reveal() {
 
     <p class="mt-4 flex items-start gap-2 text-sm">
       <UIcon
-        :name="booking.driver_arrived_at ? 'i-lucide-map-pin-check' : 'i-lucide-timer'"
-        class="mt-0.5 size-4 shrink-0"
-        :class="booking.driver_arrived_at ? 'text-success' : 'text-muted'"
+        name="i-lucide-timer"
+        class="mt-0.5 size-4 shrink-0 text-muted"
       />
 
-      <span v-if="booking.driver_arrived_at">
-        O condutor chegou ao ponto de encontro às {{ formatTime(booking.driver_arrived_at) }}<template v-if="booking.wait_until"> e espera até às {{ formatTime(booking.wait_until) }}</template>.
-      </span>
-
-      <span v-else>
+      <span>
         Esteja no ponto de encontro à hora marcada. O condutor espera até {{ booking.wait_minutes }} min<template v-if="booking.wait_until">, até às {{ formatTime(booking.wait_until) }}</template>.
+        Depois pode partir sem si, e a reserva fica sem reembolso.
       </span>
     </p>
 

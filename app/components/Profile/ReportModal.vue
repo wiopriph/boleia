@@ -2,7 +2,8 @@
 import type { Enums } from '~~/types/rpc';
 
 
-const props = defineProps<{ targetId: string, targetName: string }>();
+// tripId and bookingId are passed when the report is made from a booking: the moderator sees which trip it is about
+const props = defineProps<{ targetId: string, targetName: string, tripId?: string, bookingId?: string }>();
 const isOpen = defineModel<boolean>('open', { default: false });
 
 const { reportUser } = usePublicProfile();
@@ -34,7 +35,7 @@ async function send() {
   errorText.value = null;
 
   try {
-    await reportUser(props.targetId, reason.value, details.value.trim() || undefined);
+    await reportUser(props.targetId, reason.value, details.value.trim() || undefined, { tripId: props.tripId, bookingId: props.bookingId });
     toast.add({ title: 'Denúncia enviada', description: 'A moderação da Boleia vai analisar.', color: 'success', icon: 'i-lucide-check' });
     isOpen.value = false;
   } catch (error) {

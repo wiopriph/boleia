@@ -7,7 +7,7 @@ useSeoMeta({ title: 'A minha viagem', robots: 'noindex' });
 
 const route = useRoute();
 const tripId = String(route.params.id ?? '');
-const { fetchMyTrip, fetchTripBookings, confirmIntent, markArrived } = useDriverTrips();
+const { fetchMyTrip, fetchTripBookings, confirmIntent } = useDriverTrips();
 const { toastError } = useBoleiaError();
 const toast = useToast();
 
@@ -22,7 +22,7 @@ async function refreshAll() {
   await Promise.all([refreshTrip(), refreshBookings()]);
 }
 
-const statusText = computed(() => (trip.value ? tripStatusText(trip.value.status) : null));
+const statusText = computed(() => (trip.value ? tripStatusText(trip.value) : null));
 const isUpcoming = computed(() => !!trip.value && isUpcomingTrip(trip.value));
 
 // `now` ticks so the time windows below open without a reload
@@ -33,15 +33,10 @@ useIntervalFn(() => {
 }, 30_000);
 
 const departureMs = computed(() => (trip.value ? new Date(trip.value.departure_at).getTime() : 0));
-const waitUntilMs = computed(() => departureMs.value + (trip.value?.wait_minutes ?? 0) * 60_000);
 
 const HOUR_MS = 60 * 60 * 1000;
 const needsIntent = computed(() => !!trip.value && isUpcoming.value && trip.value.status !== 'departed' &&
   !trip.value.driver_confirmed_at && departureMs.value - now.value <= 24 * HOUR_MS);
-// driver_arrived window: departure - 3 h .. departure + wait_minutes
-const canMarkArrived = computed(() => !!trip.value && isUpcoming.value && !trip.value.driver_arrived_at &&
-  now.value >= departureMs.value - 3 * HOUR_MS && now.value <= waitUntilMs.value);
-const canMarkNoShow = computed(() => now.value >= waitUntilMs.value);
 
 const activeBookings = computed(() => bookings.value.filter(booking => ['requested', 'accepted', 'awaiting_confirm', 'disputed'].includes(booking.status)));
 const closedBookings = computed(() => bookings.value.filter(booking => !activeBookings.value.includes(booking)));
@@ -51,7 +46,6 @@ const expectedKz = computed(() => activeBookings.value
   .reduce((sum, booking) => sum + booking.price_total_kz, 0));
 
 const isConfirming = ref(false);
-const isArriving = ref(false);
 
 async function confirm() {
   isConfirming.value = true;
@@ -71,27 +65,6 @@ async function confirm() {
     await toastError(error);
   } finally {
     isConfirming.value = false;
-  }
-}
-
-async function arrive() {
-  isArriving.value = true;
-
-  try {
-    const result = await markArrived(tripId);
-
-    toast.add({
-      title: 'Chegada registada',
-      description: `Os passageiros foram avisados. Espera até às ${formatTime(result.wait_until)}.`,
-      color: 'success',
-      icon: 'i-lucide-check',
-    });
-
-    await refreshTrip();
-  } catch (error) {
-    await toastError(error);
-  } finally {
-    isArriving.value = false;
   }
 }
 
@@ -167,11 +140,8 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
           :description="trip.cancel_reason ?? undefined"
         />
 
-        <UCard v-if="needsIntent || canMarkArrived || trip.driver_arrived_at">
-          <div
-            v-if="needsIntent"
-            class="flex items-center justify-between gap-3"
-          >
+        <UCard v-if="needsIntent">
+          <div class="flex items-center justify-between gap-3">
             <div>
               <p class="font-medium">
                 Vai fazer esta viagem?
@@ -191,47 +161,15 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
               Vou viajar
             </UButton>
           </div>
-
-          <USeparator
-            v-if="needsIntent && (canMarkArrived || trip.driver_arrived_at)"
-            class="my-4"
-          />
-
-          <div
-            v-if="canMarkArrived"
-            class="flex items-center justify-between gap-3"
-          >
-            <div>
-              <p class="font-medium">
-                Já está no ponto de encontro?
-              </p>
-
-              <p class="text-sm text-muted">
-                Os passageiros são avisados e o tempo de espera de {{ trip.wait_minutes }} min fica registado.
-              </p>
-            </div>
-
-            <UButton
-              class="shrink-0"
-              icon="i-lucide-map-pin-check"
-              :loading="isArriving"
-              @click="arrive"
-            >
-              Cheguei
-            </UButton>
-          </div>
-
-          <p
-            v-else-if="trip.driver_arrived_at"
-            class="flex items-center gap-2 text-sm"
-          >
-            <UIcon
-              name="i-lucide-map-pin-check"
-              class="size-4 text-success"
-            />
-            Chegada registada às {{ formatTime(trip.driver_arrived_at) }}. Espera até às {{ formatTime(waitUntilMs) }}.
-          </p>
         </UCard>
+
+        <DriverTripControl
+          v-if="isUpcoming"
+          :trip="trip"
+          :bookings="bookings"
+          :now="now"
+          @changed="refreshAll"
+        />
 
         <UCard>
           <dl class="grid grid-cols-2 gap-3 text-sm">
@@ -315,7 +253,6 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
               v-for="booking in activeBookings"
               :key="booking.id"
               :booking="booking"
-              :canMarkNoShow="canMarkNoShow"
               @changed="refreshAll"
               @pin="openPin"
               @cancel="openCancel"
@@ -341,7 +278,6 @@ useRealtimeTripBookings(() => (isUpcoming.value ? [tripId] : []), () => {
                 v-for="booking in closedBookings"
                 :key="booking.id"
                 :booking="booking"
-                :canMarkNoShow="false"
                 @changed="refreshAll"
               />
             </ul>

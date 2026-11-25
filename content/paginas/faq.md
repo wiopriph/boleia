@@ -27,15 +27,15 @@ Duas horas antes da partida, na página da reserva. Antes disso pode falar com o
 
 ### Posso cancelar?
 
-Sim, até à hora de partida. Quanto recebe de volta depende do momento: veja [Pagamentos e reembolsos](/pagamentos-e-reembolsos). O valor exato aparece antes de confirmar o cancelamento.
+Sim, até à hora de partida e enquanto não tiver dado o PIN ao condutor. Quanto recebe de volta depende do momento: veja [Pagamentos e reembolsos](/pagamentos-e-reembolsos). O valor exato aparece antes de confirmar o cancelamento.
 
 ### Cheguei atrasado. O condutor espera?
 
-O condutor espera o tempo indicado na viagem: 30, 45 ou 60 minutos depois da hora de partida. Depois disso pode seguir viagem e marcar que não apareceu. Nesse caso não há reembolso.
+O condutor espera o tempo indicado na viagem: 30, 45 ou 60 minutos depois da hora de partida. Depois disso pode iniciar a viagem sem si. Recebe um aviso e tem 24 horas para contestar; sem contestação, não há reembolso. Se ainda apanhar o carro, dê o PIN ao condutor: a reserva volta ao normal.
 
 ### O condutor não apareceu. E agora?
 
-Marque "Não viajei" na reserva. Se o condutor não fez a viagem, recebe o valor todo de volta.
+Se o condutor não iniciar a viagem e ninguém embarcar, a viagem é cancelada 24 horas depois da hora de partida e recebe o valor todo de volta, sem ter de fazer nada. Pode também reportar o condutor na página da reserva. Se receber o aviso "A viagem começou sem si" e estava no local, conteste na reserva.
 
 ### Quanta bagagem posso levar?
 
@@ -53,7 +53,7 @@ Em "Ser condutor", envie o documento de identificação, a carta de condução, 
 
 ### Quando recebo o dinheiro?
 
-O valor entra no seu saldo quando o passageiro confirma a chegada ou quando a viagem fecha sozinha. Pode pedir o levantamento na carteira a partir de 5 000 Kz.
+Conclua a viagem na aplicação quando chegar ao destino. O valor de cada reserva entra no seu saldo quando o passageiro avalia a viagem, ou 24 horas depois se ele não a contestar. Pode pedir o levantamento na carteira a partir de 5 000 Kz.
 
 ### Quanto cobra a Boleia?
 
@@ -65,4 +65,4 @@ Cancele o mais cedo possível. Os passageiros recebem o valor todo de volta e o 
 
 ### Um passageiro não apareceu. O que faço?
 
-Espere o tempo indicado na viagem. Depois, com o PIN de pelo menos outro passageiro introduzido, pode marcar "Não apareceu".
+Espere o tempo indicado na viagem e depois inicie a viagem na aplicação. Quem não deu o PIN fica registado como não embarcado, é avisado e tem 24 horas para contestar. Sem contestação, recebe o valor dessa reserva. Se ninguém aparecer, use "Ninguém apareceu".

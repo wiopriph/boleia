@@ -91,9 +91,9 @@ const BOOKING_STATUS: Record<Enums<'booking_status'>, string> = {
   declined: 'Recusada',
   expired: 'Expirada',
   cancelled: 'Cancelada',
-  awaiting_confirm: 'À espera de confirmação da chegada',
+  awaiting_confirm: 'Em viagem ou à espera do passageiro',
   completed: 'Concluída',
-  no_show: 'Passageiro não apareceu',
+  no_show: 'Passageiro não embarcou',
   disputed: 'Em disputa',
 };
 
