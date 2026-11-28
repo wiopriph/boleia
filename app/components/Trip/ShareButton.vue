@@ -5,7 +5,9 @@ const toast = useToast();
 const { share, isSupported } = useShare();
 const { copy } = useClipboard();
 
-const shareUrl = computed(() => `${useSiteConfig().url}/t/${props.tripId}`);
+// nuxt-site-config returns the site url with a trailing slash
+const siteUrl = useSiteConfig().url.replace(/\/$/, '');
+const shareUrl = computed(() => `${siteUrl}/t/${props.tripId}`);
 
 async function onShare() {
   if (isSupported.value) {
